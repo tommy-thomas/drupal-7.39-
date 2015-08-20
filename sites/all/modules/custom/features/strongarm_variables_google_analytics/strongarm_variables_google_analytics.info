@@ -1,0 +1,11 @@
+name = Strongarm variables for Google Analytics
+description = Enforces the Google Analytics code snippet variable. DO NOT REBUILD THIS FEATURE - DOING SO WILL BREAK THE PHP SNIPPET WHICH DEFINES THE GA TRACKING DOMAIN.
+core = 7.x
+package = Features
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = strongarm_variables_google_analytics
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1
+features[variable][] = googleanalytics_codesnippet_after

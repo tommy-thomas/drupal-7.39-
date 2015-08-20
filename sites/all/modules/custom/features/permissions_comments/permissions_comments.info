@@ -1,0 +1,14 @@
+name = Permissions - Comments
+description = All comments-specific permissions
+core = 7.x
+package = Features
+version = 7.x-1.0-beta1
+project = permissions_comments
+dependencies[] = comment
+dependencies[] = features
+features[features_api][] = api:1
+features[user_permission][] = access comments
+features[user_permission][] = administer comments
+features[user_permission][] = edit own comments
+features[user_permission][] = post comments
+features[user_permission][] = skip comment approval

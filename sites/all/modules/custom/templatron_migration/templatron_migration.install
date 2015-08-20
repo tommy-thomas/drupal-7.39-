@@ -1,0 +1,4 @@
+<?php
+function templatron_migration_install() {
+  $result = db_truncate('sessions')->execute();
+}

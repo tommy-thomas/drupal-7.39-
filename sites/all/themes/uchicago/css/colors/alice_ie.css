@@ -1,0 +1,9 @@
+#header { background: none transparent; height: 76px; }
+
+/* These styles are repeated here because they are otherwise wrapped in media queries in the phoenix stylesheet */
+#block-views-homepage-feed-block h2, #block-views-news-summarynewsblock h2 { background-color: transparent; color: #8A9045 !important; }
+#block-views-homepage-feed-block, #block-views-news-summarynewsblock { border-top-color:#8A9045 !important; }
+#block-views-news-summarynewsblock a { color: #8A9045; }
+#block-events h2, #block-uceventslist-uceventsblock h2 { color: #800000 !important; }
+#block-events, #block-uceventslist-uceventsblock { border-top:5px solid #800000!important; background:transparent url("../../images/alice/modulebg.png") bottom left repeat-x; }
+}

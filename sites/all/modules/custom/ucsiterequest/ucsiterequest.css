@@ -1,0 +1,20 @@
+.view-uc-site-request-view #edit-field-short-name-value-wrapper, .view-uc-site-request-view #edit-field-status-launch-value-wrapper, .view-uc-site-request-view #edit-field-billing-client-group-tid-wrapper {
+  float: left;
+  margin-right: 10px;
+}
+.view-uc-site-request-view .views-submit-button, .view-uc-site-request-view .views-reset-button {
+  float: left;
+}
+.view-uc-site-request-view .views-submit-button input, .view-uc-site-request-view .views-reset-button input {
+  margin-top: 19px;
+  line-height: 18px;
+  margin-right: 10px;
+}
+
+.node-ucsiterequestform .field-label {
+  font-weight: bold;
+  margin-top: 16px;
+}
+.node-ucsiterequestform .fieldset-wrapper .field-label:first-child {
+  margin-top: 0;
+}

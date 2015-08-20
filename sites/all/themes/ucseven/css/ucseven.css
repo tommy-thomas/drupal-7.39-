@@ -1,0 +1,38 @@
+/* Insert module */
+div.form-item.insert {
+margin:10px 0;
+}
+.insert-style {
+border:1px solid #cccccc
+}
+input.form-submit.insert-button {
+margin-left:5px;
+padding:0 10px
+}
+
+/* Color scheme picker */
+#edit-colorscheme {
+font-size:1.2em;
+}
+
+div#toolbar div.toolbar-drawer p {
+  float: left;
+  height: 28px;
+  line-height: 24px;
+  margin-left: 5px;
+  padding: 5px 0 2px;
+  font-size: 0.864em;
+}
+
+/* Removing for now; these are here to better format main content image fieldset when used with FieldGroup
+
+#edit-field-maincontentimage fieldset, #edit-field-maincontentimage .fieldset-wrapper {
+border:none;
+padding:0;
+margin:0
+}
+#edit-field-maincontentimage legend {
+display:none
+}
+
+*/

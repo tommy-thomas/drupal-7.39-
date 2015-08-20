@@ -1,0 +1,127 @@
+
+/* ------------------ Wrapper Styles ------------------ */
+
+#main {padding-top:20px;}
+
+/* ------------------ Header Styles ------------------ */
+
+#wordmark {	background-image: url("../../images/history/uchicago_gray.png"); }
+#page-wrapper { background: none repeat scroll 0 0 #ebebe3;  }
+#header { background: none repeat scroll 0 0 #ebebe3;border-bottom: 4px solid #155f82;}
+#dept-title{ background-image: url("../../images/history/masthead_history.png") !important; }
+a#dept-title{ color:#c16622 !important; }
+
+/* ------------------ Typography and Link Styles ------------------ */
+
+/* - h1s - */
+h1#page-title { color: #c16622; }
+
+/* - h2s - */
+.sidebar h2 { background-color: #c16622; color: #fff;}
+body.front .region-home-center .block-block h2 { color: #c16622; font-size: 1.5em;}
+.region-content h2 { color: #8a9045; }
+.sidebar .node-homepage-mini-feature h2 { color: #8a9045; }  
+
+/* - h3s- */
+.region-content h3, .node-homepage-mini-feature .field-items h3, .sidebar .content h3 { color: #5a5952; font-weight: bold; }
+#block-views-homepage-feed-block h3 { color: #5a5952; }
+.homefeature h3 { background:#c16622;	color:#fff; }
+
+/* - links- */
+a { color: #155f83; }
+a:hover,a:focus { color: #8a9045; }
+a:active,.block li a.active { color: #155f83; font-weight: bold; }
+.region-header,
+.region-header a,
+.region-header li a.active,
+#name-and-slogan,
+#name-and-slogan a,
+#secondary-menu-links li a { color: #fffeff; }
+a.active:hover, a.block:hover{color: #8a9045;}
+
+/* ------------------ Blocks, Features, Table Styles ------------------ */
+
+/*sidebar-first margin accomodates restyled menu*/
+
+#sidebar-first { margin-top: -20px; }
+
+/* - menu - */
+#block-system-main-menu{
+  background: #ffffff;
+  padding-top: 34px;
+  padding-bottom: 30px;
+  margin-bottom: 0;
+  margin-top: 0;
+  }
+
+#block-system-main-menu .content a { background:#fff; color:#155f83; border-top:1.5px solid #d1d1d1;}
+#block-system-main-menu .content ul li a { background:#fff; }
+#block-system-main-menu .content ul li.first a {border-top:none;}
+#block-system-main-menu .content ul li a:hover { background: #727371; color:#fff; }
+#block-system-main-menu .content ul li ul li a { color: #155f83; }
+#block-system-main-menu .content ul li ul li a:hover {background: none; color:#8a9045; }
+#block-system-main-menu .content ul li ul li { background: url("../../images/greybullet.gif") no-repeat scroll 10px 10px #ffffff; }
+
+/* - secondary menus, sidebar blocks */
+.sidebar .block, .sidebar .block .block-menu-menu, .rightcolimage-outerwrapper{
+  background: #fff;
+  }
+
+.node-homepage-mini-feature { border-top: 5px solid #155f83; }
+
+.imgrt img { border-color: #266178; }
+#block-search-form{ margin-top: 0; background: #fff; }
+
+
+/* - rss icon - */
+#block-views-homepage-feed-block div.feed-icon a { background: url("../../images/feed.png") no-repeat scroll 0 -15px transparent; }
+#block-views-homepage-feed-block div.feed-icon a:hover { background: url("../../images/feed.png") no-repeat scroll 0 0 transparent; }
+
+/* - homepage news feed - */
+#block-views-homepage-feed-block h2 { color: #8a9045 !important; }
+#block-views-homepage-feed-block { 
+  background: #fff;
+  border-top: 5px solid #155f83; 
+	}
+
+/* - misc. - */
+hr { border-color: #d7d7cf;}
+#mainfeature { border-bottom: 1px solid #d7d7cf; }
+table tr th { background: none repeat scroll 0 0 #eae9e1; }
+textarea, input.form-select { border: 1px solid #fff;}
+input, textarea { background: #fff; }
+input.form-submit { background: #e6e5e5; }
+
+/* ------------------ Footer Styles ------------------ */
+
+#footer-wrapper { background: url("../../images/history/outsidefooterbg.gif") repeat-x scroll 0 0 #5a5952; border:none; }
+#footer { background: url("../../images/history/insidefooterbg.gif") repeat-x scroll 0 0 #5a5d56; }
+#footer p, #footer li, #footer div.field-content { color: #bebeb6; }
+#footer a, #footer p { color: #bebeb6; }
+#footer a:hover { color: #fff; }
+
+/* - some styles just for big screens - */
+@media screen and (min-width: 701px) {
+  #block-views-news-summarynewsblock h2 { color: #8a9045 !important; }
+  #block-views-news-summarynewsblock { 
+    background: #fff;
+    border-top:5px solid #155F83; }
+}
+#block-events h2, #block-uceventslist-uceventsblock h2 { color: #8a9045 !important; }
+#block-events, #block-uceventslist-uceventsblock { 
+    background: #fff;
+    border-top: 5px solid #155f83; 
+}
+.sidebar .block, .rightcolimage-outerwrapper {
+    background: #fff;
+}
+
+/* - some styles just for small screens - */
+@media screen and (max-width: 700px) {
+.not-front #block-system-main-menu {margin-top:-20px !important;}
+#block-system-main-menu{margin-top:0px !important;padding-top:0 !important;padding-bottom:0 !important;}
+#block-uceventslist-uceventsblock h2 {color:#fff !important;}
+#sidebar-first{margin-top:0 !important;}
+#toggle-nav a {background-image: url("../../images/history/mobilesprite.png") !important; color: #474740 !important;}
+}
+

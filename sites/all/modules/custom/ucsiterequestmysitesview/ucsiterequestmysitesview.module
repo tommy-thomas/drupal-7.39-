@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the ucsiterequestmysitesview feature.
+ */
+
+include_once 'ucsiterequestmysitesview.features.inc';

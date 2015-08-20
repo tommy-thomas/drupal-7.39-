@@ -1,0 +1,7 @@
+name = BSD Survey Manager
+description = "Handle scoring of form submissions for the BSD Financial Toxicity Survey."
+core = 7.x
+package = BSD - Medicine, Hematology/Oncology
+files[] = bsd_survey_manager.module
+files[] = bsd_survey_admin.inc
+files[] = bsd_survey_confirmation.inc

@@ -1,0 +1,11 @@
+name = Permissions - Captcha
+description = All captcha-specific permissions
+core = 7.x
+package = Features
+version = 7.x-1.0-beta1
+project = permissions_captcha
+dependencies[] = captcha
+dependencies[] = features
+features[features_api][] = api:1
+features[user_permission][] = administer CAPTCHA settings
+features[user_permission][] = skip CAPTCHA

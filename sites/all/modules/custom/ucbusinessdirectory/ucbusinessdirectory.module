@@ -1,0 +1,18 @@
+<?php
+function ucbusinessdirectory_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ucbusinessdirectory'),
+    'template path' => drupal_get_path('module', 'ucbusinessdirectory'),
+  );
+}
+
+// Register a theme suggestion for node--business-directory-entry
+function ucbusinessdirectory_theme() {
+  return array(
+    'node__business_directory_entry' => array(
+      'template' => 'node--business-directory-entry',
+      'path' => drupal_get_path('module', 'ucbusinessdirectory'),
+    ),
+  );
+}

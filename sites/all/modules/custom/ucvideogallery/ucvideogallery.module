@@ -1,0 +1,11 @@
+<?php
+
+function ucvideogallery_page_alter(&$page) {
+  // Make sure there are never sidebars on the video gallery page
+  $this_page = current_path();
+  if ($this_page == 'video-gallery') {
+    unset ($page['sidebar_second']);
+    unset ($page['sidebar_first']);
+    unset ($page['left_nav']);
+  }
+}

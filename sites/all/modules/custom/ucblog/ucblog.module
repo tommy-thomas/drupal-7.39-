@@ -1,0 +1,167 @@
+<?php
+// $Id$
+
+/**
+  * @file
+  * A module that provides additional blog functionality.
+  *
+  * This module defines admin settings, and special handling of taxonomy terms for our blog module.
+  */
+
+/**
+  * Implements hook_help().
+  */
+function ucblog_help($path, $arg) {
+  if ($path == 'admin/help#blog') {
+    return t('A module that provides additional blog functionality.');
+  }
+}
+
+/**
+  * Implements hook_menu().
+  *
+  * Adds a blog settings page to the Configuration screen.
+  */
+function ucblog_menu() {
+  $items = array();
+
+  $items['admin/config/content/blog'] = array(
+    'title' => 'Blog Settings',
+    'description' => 'Configuration settings for your site blog.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ucblog_settings_form'),
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+  * Create and display the blog settings form.
+  */
+function ucblog_settings_form($form, &$form_state) {
+
+  // Define a variable for the title of the blog.
+  $form['ucblog_title'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('ucblog_title', 'Latest Blog Entries'),
+    '#title' => t('Title of your blog'),
+    '#description' => t('If you do not specify a blog title, you will simply see the text "Latest Blog Entries" at the top of your blog.'),
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#required' => FALSE,
+  );
+
+  // Define a variable for the text in the link that takes users back to the main site.
+  $form['ucblog_return_text'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('ucblog_return_text', 'Return to Main Site'),
+    '#title' => t('Link text for return to home link'),
+    '#description' => t('This is the text which appears in the upper right corner of your site providing a link back to your main site.'),
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#required' => FALSE,
+  );
+  
+  // Submit button
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings'),
+  );
+
+  return $form;
+}
+
+/**
+  * Save configuration settings
+  */
+function ucblog_settings_form_submit($form, &$form_state) {
+  // First, set the three variables to the values in the form.
+  variable_set('ucblog_title', $form_state['values']['ucblog_title']);
+  variable_set('ucblog_return_text', $form_state['values']['ucblog_return_text']);
+  drupal_flush_all_caches();
+  drupal_set_message(t('Your settings have been saved.'));
+}
+
+/**
+  * Implements hook_block_info().
+  *
+  * Define a block which searches against just the blog entries.
+  */
+function ucblog_block_info() {
+  $blocks['ucblogsearch'] = array(
+    'info' => t('Blog Search'), 
+    'cache' => DRUPAL_NO_CACHE,
+    'status' => 1,
+    'region' => 'sidebar_second',
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'pages' => "blog\r\nblog/*",
+  );
+  return $blocks;
+}
+
+/**
+  * Implements hook_block_view().
+  */
+function ucblog_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'ucblogsearch':
+      $search_token = drupal_get_token("search_form");
+      $block['subject'] = t('Search Blog Entries');
+      $block['content'] = 
+      '<form action="/search/node" method="post" id="search-form" class="search-form blog" role="search">'
+      . '<div class="container-inline">'
+      . '<div class="form-item"><input type="text" class="form-text blog" value="" size="25" name="keys" /></div>'
+      . '<div class="form-actions"><input type="submit" value="Search" name="op" title="Search" id="submit" class="form-submit" /></div>'
+      . '<input type="hidden" value="' . $search_token . '" name="form_token" />'
+      . '<input type="hidden" value="search_form" id="edit-search-form" name="form_id" />'
+      . '<input type="hidden" name="type[blog_entry]" id="edit-type-blog_entry" value="blog_entry" />'
+      . '</div>'
+      . '</form>';
+    break;
+  }
+  return $block;
+}
+
+/**
+  * Implements hook_form_alter().
+  *
+  * This alter function does a couple hacky things to facilitate the blog workflow.
+  */
+function ucblog_form_blog_entry_node_form_alter(&$form, &$form_state, $form_id) {
+  // If this is a new entry, hide the Published workflow option.
+  // This is needed because otherwise the rule which publishes the new entry causes a PDO error.
+  if (!isset($form['nid']['#value'])) {
+    unset($form['field_blogworkflow']['und']['#options']['published']);
+  }
+  // And now a couple of hacky bits to remove/rename some of the submit buttons provided by the Save Draft module.
+  if (isset($form['actions']['draft']['#value'])) {
+    // If the Unpublish button exists, hide it. Unpublished is handled by the rules defined for the blog workflow.
+    if ($form['actions']['draft']['#value'] == 'Unpublish') {
+      $form['actions']['draft']['#access'] = FALSE;
+    }
+    // If the Save as draft button exists, rename it to Save
+    if ($form['actions']['draft']['#value'] == 'Save as draft') {
+      $form['actions']['draft']['#value'] = 'Save';
+    }
+  }
+  // If the Publish button exists, hide it. Publishing is handled by the Rules defined for the blog workflow.
+  if (isset($form['actions']['submit']['#value'])) {
+    if ($form['actions']['submit']['#value'] == 'Publish') {
+      unset($form['actions']['submit']);
+    }
+  }
+  // If the user is not a blog moderator, site owner, or admin, then do a couple things.
+  if (!user_access('edit any blog_entry content') && !user_access('administer nodes')) {
+    // If the node is already published, do not let the user unpublish it.
+    if ($form['field_blogworkflow']['und']['#default_value'][0] == 'published') {
+      unset($form['field_blogworkflow']['und']['#options']['draft']);
+      unset($form['field_blogworkflow']['und']['#options']['pending']);
+    } else {
+      // If the node is not published yet, do not let the user publish it. Only blog moderators or site owners can publish.
+      unset($form['field_blogworkflow']['und']['#options']['published']);
+    }
+  }
+}

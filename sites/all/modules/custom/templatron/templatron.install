@@ -1,0 +1,121 @@
+<?php
+/**
+* Create and populate templatron calendar variables. Disable captcha and enable honeypot, and set default honeypot configuration. Set default site name size. Remove the administer themes permission for site owners. Disable RDF.
+*/
+function templatron_update_7001() {
+  /* Move the calendar variables from theme settings to sitewide variables */
+  $theme_uchicago_settings = variable_get('theme_uchicago_settings');
+  if (isset($theme_uchicago_settings['calendar_api_key'])) {
+    variable_set('templatron_calendar_api_key', $theme_uchicago_settings['calendar_api_key']);
+  }
+  if (isset($theme_uchicago_settings['calendar_id'])) {
+    variable_set('templatron_calendar_id', $theme_uchicago_settings['calendar_id']);
+  }
+  if (isset($theme_uchicago_settings['calendar_list_id'])) {
+    variable_set('templatron_calendar_list_id', $theme_uchicago_settings['calendar_list_id']);
+  }
+  if (isset($theme_uchicago_settings['calendar_rss_id'])) {
+    variable_set('templatron_calendar_rss_id', $theme_uchicago_settings['calendar_rss_id']);
+  }
+  if (isset($theme_uchicago_settings['logo_path']) && $theme_uchicago_settings['logo_path'] == 0) {
+    variable_set('templatron_logo_path', $theme_uchicago_settings['logo_path']);
+  }
+
+  // Set an initial value for the masthead font size
+  $site_name = variable_get('site_name');
+  $site_name_length = strlen($site_name);
+  if ($site_name_length > 60) {
+    variable_set('templatron_site_name_size', 'small');
+  } elseif ($site_name_length > 30) {
+    variable_set('templatron_site_name_size', 'medium');
+  } else {
+    variable_set('templatron_site_name_size', 'large');
+  }
+
+  // Disable CAPTCHA-related modules since they aren't working very well
+  if (module_exists('permissions_captcha')) {
+    module_disable(array('name' => 'permissions_captcha'));
+  }
+  if (module_exists('image_captcha')) {
+    module_disable(array('name' => 'image_captcha'));
+  }
+  if (module_exists('captcha')) {
+    module_disable(array('name' => 'captcha'));
+  }
+
+  // Enable honeypot module if it hasn't already been enabled
+  if (!module_exists('honeypot')) {
+    module_enable(array('name' => 'honeypot'));
+  }
+  // Set default configuration settings for honeypot
+  variable_set('honeypot_form_comment_node_blog_entry_form', 1);
+  variable_set('honeypot_form_comment_node_news_form', 1);
+  variable_set('honeypot_form_comment_node_webform_form', 1);
+  variable_set('honeypot_form_user_pass', 1);
+  variable_set('honeypot_form_user_register_form', 1);
+  variable_set('honeypot_form_webforms', 1);
+  variable_set('honeypot_element_name', 'homepage');
+  variable_set('honeypot_time_limit', '5');
+  // Allow authenticated users to bypass honeypot
+  user_role_grant_permissions(2, array('bypass honeypot protection'));
+
+  // Revoke site owner's permission to administer themes (since we do this in the custom settings screen now)
+  user_role_revoke_permissions(235655953, array('administer themes'));
+
+  // Allow site owners to clear page and block caches
+  user_role_grant_permissions(235655953, array('clear page and block caches'));
+
+  // Disable the RDF module since we don't really need it
+  if (module_exists('rdf')) {
+    module_disable(array('name' => 'rdf'));
+  }
+
+   // Define path variables
+  $private_path = conf_path() . '/files/private';
+  $private_path_webform = $private_path . '/webform';
+
+  // Set the private path variable and make the directories
+  variable_set('file_private_path', $private_path);
+  drupal_mkdir($private_path);
+  drupal_mkdir($private_path_webform);
+  file_create_htaccess($private_path, TRUE);
+}
+
+/**
+* Set the image_allow_insecure_derivatives variable so that images don't break.
+* See https://drupal.org/drupal-7.21-release-notes and https://drupal.org/drupal-7.20-release-notes
+*/
+function templatron_update_7002() {
+  variable_set('image_allow_insecure_derivatives', 1);
+}
+
+/**
+ * Promote all existing homepage features to the front page.
+ * This is in preparation for rolling out updates which give users the ability
+ * to include a feature on an interior page.
+ */
+function templatron_update_7003() {
+  // Promote all features in the node table
+  $query = db_update('node')
+    ->fields(array('promote' => 1))
+    ->condition('type', 'homepage_feature')
+    ->execute();
+
+  // Promote all features in the node revisions table
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'homepage_feature')
+    ->execute();
+
+  while ($record = $query->fetchAssoc()) {
+    $update_revision = db_update('node_revision')
+      ->fields(array('promote' => 1))
+      ->condition('nid', $record['nid'])
+      ->execute();
+  }
+
+  // Enable entityreference
+  if (!module_exists('entityreference')) {
+    module_enable(array('name' => 'entityreference'));
+  }
+}

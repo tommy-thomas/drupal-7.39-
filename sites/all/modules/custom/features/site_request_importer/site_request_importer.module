@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Site request importer feature.
+ */
+
+include_once 'site_request_importer.features.inc';

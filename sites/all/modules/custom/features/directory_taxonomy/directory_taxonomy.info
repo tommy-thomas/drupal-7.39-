@@ -1,0 +1,11 @@
+name = Directory taxonomy
+description = Taxonomy for directories
+core = 7.x
+package = Features
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = directory_taxonomy
+dependencies[] = features
+dependencies[] = taxonomy
+features[features_api][] = api:1
+features[taxonomy][] = directories

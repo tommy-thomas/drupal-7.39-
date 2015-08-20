@@ -1,0 +1,156 @@
+.view-opportunities {
+  .attachment {
+    margin-bottom: 3em;
+    h3 {
+      font-size: 1.125em;
+    }
+    p, ul, ol {
+      line-height: 1.35em;
+      margin-bottom: 1em;
+    }
+    .btn {
+      box-sizing: border-box;
+      color: white;
+      display: block;
+      bottom: 0;
+      font-size: 1.125em;
+      padding: 10px;
+      text-shadow: none;
+      text-transform: uppercase;
+      width: 100%;
+      &.ss-standard:after {
+        color: white;
+        position: relative;
+        top: 2px;
+        left: 5px;
+        font-size: 16px;
+      }
+    }
+    .views-row-1 {
+      .btn {
+        background: #3e769a;
+      }
+    }
+    .views-row-2 {
+      .btn {
+        background: #c16622;
+      }
+    }
+    .views-row-3 {
+      .btn {
+        background: #8f3931;
+      }
+    }
+    .views-row-4 {
+      .btn {
+        background: #8A9045;
+      }
+    }
+  }
+  .opportunity-instructions {
+    font-size:.9em;
+    margin-bottom: 1em;
+  }
+  .view-filters {
+    margin-bottom: 2em;
+  }
+  .view-filters-title {
+    margin-bottom: .5em;
+  }
+  .views-exposed-widget {
+    .form-type-select select {
+      height: 125px;
+      width: 100%;
+    }
+    .form-type-textfield input {
+      box-sizing: border-box;
+      width: 100%;
+      height: 28px;
+    }
+    &.views-exposed-button {
+      float: left;
+      margin-right: 5px;
+      input {
+        min-width: 100px;
+      }
+    }
+  }
+  .view-header {
+    padding-left: 8px;
+  }
+  .view-content {
+    table {
+      h3 {
+        font-size: 1em;
+      } 
+      td.active {
+        background: transparent;
+      }
+      .views-field-title {
+        width: 70%;
+      }
+    }
+
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .view-opportunities {
+    .attachment {
+      .views-row {
+        margin-bottom: 1em;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .view-opportunities {
+    .attachment {
+      .row-fluid {
+        position: relative;
+      }
+      .views-row {
+        padding-bottom: 40px;
+        position: static;
+        &.column-width-6 {
+          .btn {
+            width: 49%;
+          }
+        }
+        &.column-width-4 {
+          .btn {
+            width: 31%;
+          }
+        }
+        &.column-width-3 {
+          .btn {
+            width: 23%;
+          }
+        }
+        &.column-width-12 {
+          .btn {
+            width: 99%;
+          }
+        }
+      }
+      .btn {
+        position: absolute;
+        bottom: 0;
+      }
+    }
+  }
+}
+
+.node-opportunity {
+  h3.field-label {
+    text-transform: uppercase;
+  }
+  .field {
+    margin-bottom: 1em;
+  }
+  .field-type-taxonomy-term-reference ul.links li {
+    float: none;
+    font-size: 1em;
+  }
+}

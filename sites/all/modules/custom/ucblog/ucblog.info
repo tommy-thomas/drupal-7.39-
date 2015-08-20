@@ -1,0 +1,6 @@
+name = UChicago Blog
+description = "This module add some functions required by the blog functionality"
+core = 7.x
+package = UChicago
+files[] = ucblog.module
+files[] = ucblog.install

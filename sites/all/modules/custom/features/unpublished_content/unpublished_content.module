@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Unpublished content feature.
+ */
+
+include_once('unpublished_content.features.inc');

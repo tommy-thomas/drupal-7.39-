@@ -1,0 +1,6 @@
+name = Business Directory Helper
+description = "Provides theming support for the Business Directory feature"
+core = 7.x
+package = UChicago
+files[] = ucbusinessdirectory.module
+stylesheets[all][] = ucbusinessdirectory.css

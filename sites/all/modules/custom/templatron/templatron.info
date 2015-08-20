@@ -1,0 +1,7 @@
+name = Templatron
+description = "This module is just a place to store any custom module code required for Templatron"
+core = 7.x
+package = UChicago
+files[] = templatron.module
+scripts[] = js/jquery.dataTables.1.9.0.min.js
+scripts[] = js/scripts.js

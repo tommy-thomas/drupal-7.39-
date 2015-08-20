@@ -1,0 +1,12 @@
+name = LDAP configuration
+description = LDAP-to-Drupal role mapping
+core = 7.x
+package = Features
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = ldap_configuration
+dependencies[] = ctools
+dependencies[] = ldap_authorization
+features[ctools][] = ldap_authorization:ldap_authorization:1
+features[features_api][] = api:1
+features[ldap_authorization][] = drupal_role

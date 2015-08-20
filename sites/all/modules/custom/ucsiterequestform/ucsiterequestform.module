@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the UCSiteRequestForm feature.
+ */
+
+include_once('ucsiterequestform.features.inc');

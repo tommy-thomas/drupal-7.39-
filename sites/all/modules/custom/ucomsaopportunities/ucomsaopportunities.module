@@ -1,0 +1,32 @@
+<?php
+function ucomsaopportunities_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ucomsaopportunities'),
+    'template path' => drupal_get_path('module', 'ucomsaopportunities'),
+  );
+}
+
+// Register a theme suggestion for node--opportunity
+function ucomsaopportunities_theme() {
+  return array(
+    'node__opportunity' => array(
+      'template' => 'node--opportunity',
+      'path' => drupal_get_path('module', 'ucomsaopportunities'),
+    ),
+  );
+}
+
+// Make sure the right column is never rendered on opportunity pages and views
+function ucomsaopportunities_page_alter(&$page) {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if ($node->type == 'opportunity') {
+      unset($page['sidebar_second']);
+    }
+  }
+
+  if (arg(0) == 'opportunities') {
+    unset($page['sidebar_second']);
+  }
+}

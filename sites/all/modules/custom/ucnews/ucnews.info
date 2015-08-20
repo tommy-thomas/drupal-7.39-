@@ -1,0 +1,5 @@
+name = UChicago News
+description = "University of Chicago news feed"
+core = 7.x
+package = UChicago
+files[] = ucnews.module

@@ -1,0 +1,218 @@
+/*
+Override Theme Name: Alice
+Based on UChicago College theme
+*/
+
+/* Colors
+Maroon: #800000
+Orange: #C16622
+Green: #8A9045
+Blue: #447F9B
+*/
+
+/* ------------------ Header Styles ------------------ */
+
+#site-name {padding: 0;}
+#wordmark {	background:transparent url("../../images/alice/headerUofC.png") top right no-repeat; float:right; margin-top:34px; margin-right:0; }
+#wordmark.grid_4 { width: 332px!important; height: 15px!important;}
+#page-wrapper { background:url(../../images/alice/backgroundPage.png) top repeat-x #ebebe3; }
+#header { background: none transparent; height: 76px; }
+#dept-title.grid_8 {width: 550px; height: 25px; margin-top: 24px; margin-left:0;}
+
+#main {padding-top: 0px;}
+#content {padding-top: 32px;}
+
+#sidebar-first { background: white; /* Old browsers */
+background: -moz-linear-gradient(top,  #ccc2b4 0%, #ffffff 1%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ccc2b4), color-stop(1%,#ffffff)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #ccc2b4 0%,#ffffff 1%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #ccc2b4 0%,#ffffff 1%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #ccc2b4 0%,#ffffff 1%); /* IE10+ */
+background: linear-gradient(top,  #ccc2b4 0%,#ffffff 1%); /* W3C */
+
+border: 1px solid #E1DCD8; border-top: none; width: 216px; margin-top: 10px;}
+
+/* ------------------ Typeography and Link Styles ------------------ */
+
+/* - h1s - */
+h1#page-title { color: #8A9045; font-family: "ProximaNova-Regular",helvetica,sans-serif; font-size: 25px; text-transform: uppercase; }
+
+/* - h2s - */
+.sidebar h2 { background-color: transparent;  color: #8A9045; font-family: "ProximaNova-Semibold",helvetica,sans-serif; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; }
+.sidebar .node-homepage-mini-feature h2, .node-homepage-mini-feature h2, #block-events h2, #block-views-news-summarynewsblock h2, #block-uceventslist-uceventsblock h2, #block-views-homepage-feed-block h2 {font-family: "ProximaNova-Semibold",helvetica,sans-serif;}
+#sidebar-first h2 {padding-top: 0; padding-left: 3px;}
+#sidebar-second h2 { color: #8A9045; }
+
+/* body.front .region-home-center .block-block h2 { color: #C97A3F; font-weight: bold;} */
+.region-content h2 { color: #C97A3F; font-weight: bold; }
+.sidebar .node-homepage-mini-feature h2, .node-homepage-mini-feature h2 { color: #8A9045; }
+
+/* - h3s- */
+.region-content h3 { color: #155F83; }
+#block-views-homepage-feed-block h3 { color: #447F9B; }
+.homefeature h3 { background:#8A9045; color:#ffffff; }
+
+/* - links- */
+a { color: #800000; }
+a:hover,a:focus { color: #C97A3F; text-decoration: none;}
+a:active,.block li a.active { color: #800000; }
+.region-header,
+.region-header a,
+.region-header li a.active,
+#name-and-slogan,
+#name-and-slogan a,
+#secondary-menu-links li a { color: #fffeff; }
+#sidebar-first .block a { font-size: 1.05em;}
+
+/* - misc overrides - */
+.content li { line-height: 1.2em; }
+
+/* ------------------ Blocks, Features, Table Styles ------------------ */
+
+/* - menu - */
+/*
+#block-system-main-menu .content a { background:#d6d6ce; color:#184154; border-top:1px solid #fff; }
+#block-system-main-menu .content ul li a { background:#d6d6ce; }
+#block-system-main-menu .content ul li a:hover { background:#969693; color:#fff }
+#block-system-main-menu .content ul li ul li a { color: #155f83; }
+#block-system-main-menu .content ul li ul li a:hover { background:#EAEAE1; color:#1B4B61; }
+#block-system-main-menu .content ul li ul li { background: url("../../images/greybullet.gif") no-repeat scroll 10px 10px #eaeae1; }
+*/
+
+#block-system-main-menu .content ul li, #block-system-main-menu .content ul li ul li, #block-system-main-menu .content a, #block-system-main-menu .content ul li a:hover,#block-system-main-menu .content ul li a:focus, #block-system-main-menu .content ul li ul li a:hover,#block-system-main-menu .content ul li ul li a:focus { background: none; min-height: 0; border: none;}
+body.front #block-system-main-menu {margin-top: 42px;}
+
+#block-system-main-menu .content ul.menu {margin:3px 0 0 2px;}
+#block-system-main-menu .content ul.menu li {color:#800000; display:block; font-size:10.5px; line-height: 1.2em; list-style:none; margin: 0 0 0 0.5em; padding: 6px 0 0 0;}
+#block-system-main-menu .content ul.menu li a {border-bottom:1px solid #E1DCD8; color:#800000; display:block; padding:0px 3px 6px 0; width:207px;}
+#block-system-main-menu .content ul.menu li a:hover {color:#C97A3F; text-decoration:none;}
+#block-system-main-menu .content ul.menu li.expanded a {border-bottom:none; color:#800000; display:block; padding:0px 10px 4px 0; width:180px;}
+#block-system-main-menu .content ul.menu li ul.menu {margin:0;}
+#block-system-main-menu .content ul.menu li ul.menu li {color:#C97A3F; display:block; line-height: 1.2em;}
+#block-system-main-menu .content ul.menu li ul.menu li a {border-bottom: none; color:#C97A3F; display:block; padding:0 0 2px 9px; margin:0;}
+#block-system-main-menu .content ul.menu li ul.menu li a:hover {color:#800000;}
+
+/* - blocks and tops - */
+.sidebar .block, .rightcolimage-outerwrapper { background:transparent; }
+#sidebar-first .block { border-bottom: 1px solid #e1dcd8; margin-left: 5px; }
+.block .socialblock { padding: 0; }
+#sidebar-second .block, #block-views-homepage-feed-block { background: transparent url("../../images/alice/modulebg.png") bottom left repeat-x; border-top-width:5px; border-top-style:solid;}
+#sidebar-second .block {border-top-color: #8A9045;}
+#block-ucaddthis-ucaddthisblock {border-top: none !important;}
+
+#sidebar-second #block-views-homepage-mini-features-block {background-image: none;}
+.node-homepage-mini-feature { border-top:none; }
+#sidebar-first .node-homepage-mini-feature { width: auto!important;}
+#sidebar-first .node-homepage-mini-feature img { margin-left: -6px;}
+#sidebar-first .node-homepage-mini-feature .field-name-field-miniblurb {padding: 8px 10px;}
+
+
+.imgrt img { border-color: #266178; }
+#sidebar-second #block-cck-blocks-field-rightimage .imgrt img {border-top: none;}
+
+/* - rss icon - */
+#block-views-homepage-feed-block div.feed-icon a { background: url("../../images/feed.png") no-repeat scroll 0 -15px transparent; }
+#block-views-homepage-feed-block div.feed-icon a:hover { background: url("../../images/feed.png") no-repeat scroll 0 0 transparent; }
+
+/* - homepage news feed - */
+#block-views-homepage-feed-block h2 { color: #447F9B !important; }
+#block-views-homepage-feed-block { border-top-color:#447F9B; }
+
+/* - misc. - */
+hr { border-color: #CCCCCC;}
+#mainfeature { border-bottom: 1px solid #d7d7cf; }
+table tr th, table tr { background: none; border-bottom: 1px solid #ccc; }
+.content thead { border-top: 1px solid #ccc; }
+.content table td, .content table th {padding:0.3em 0.6em; line-height: 1.3em;}
+.content table tr.even, .content table tr:nth-child(odd) {background-color: white;}
+.content table thead tr {background: transparent !important;}
+
+textarea, input.form-select { border: 1px solid #fff;}
+input, textarea { background: #fff; }
+input.form-submit { background: #E6E5E5; }
+/* #search-block-form input.form-submit, #search-form input.form-submit { background-image: url("../../images/alice/searchIcon.png"); height: 16px; width: 18px;} */
+#search-form input#edit-keys, #block-search-form .form-item-search-block-form input {width: 148px;}
+
+/* ------------------ Footer Styles ------------------ */
+
+#footer-wrapper { background: #626262; border:none; height: auto; }
+#footer { background: url("../../images/alice/wordmark.png") no-repeat scroll 54px 50%; height: auto; padding-left: 380px; }
+#footer .grid_3 {width: 125px;}
+#footer p, #footer li, #footer div.field-content { color: #BEBEB6; }
+#footer a, #footer p { color: #BEBEB6; }
+#footer a:hover { color: #fff; }
+
+@media screen and (min-width: 981px) {
+#block-views-news-summarynewsblock h2 { background-color: transparent; color: #8A9045 !important; }
+#block-views-news-summarynewsblock { border-top-color:#8A9045 !important; }
+#block-views-news-summarynewsblock a { color: #8A9045; }
+#block-events h2, #block-uceventslist-uceventsblock h2 { color: #800000 !important; }
+#block-events, #block-uceventslist-uceventsblock { border-top:5px solid #800000!important; background-position-y: top !important; }
+
+}
+
+@media screen and (min-width: 701px) and (max-width: 980px) {
+	#footer {background-image: url("../../images/alice/wordmark_sm.png"); background-position: 97% 8px; padding-bottom: 0;height: auto;}
+	#wordmark.grid_4 {float: left; background-size: 332px 15px; padding-top: 4px;margin-right:10px;}
+	.container_12 .grid_9{width:451px!important;}
+	#page-wrapper { background:url(../../images/alice/backgroundPage.png) top repeat-x #ebebe3!important; }
+	.container_12 .grid_3 {width: 100%;}
+	#sidebar-second #block-cck-blocks-field-rightimage, #sidebar-second #block-views-related-links-block {width:218px; float:left;}
+	#sidebar-second .block:nth-child(even) {margin-left:15px;}
+	.node-homepage-mini-feature img {display: none;}
+	.view-staff td img {width: 100px;}
+}
+
+/* - some styles just for small screens - */
+@media screen and (max-width: 700px) {
+#dept-title.grid_8 {color: maroon !important; font-family: "ProximaNova-Regular",helvetica,sans-serif; margin-top: 0;}
+#wordmark.grid_4 {float: left; background-size: 332px 15px; margin-top: 4px;}
+#toggle-nav a {background-image: url("../../images/alice/mobilesprite.png") !important; color: #474740 !important;}
+#main, .front #main {padding-top: 32px!important;}
+#sidebar-first {background: white !important; border:none; border-top: 1px solid #E1DCD8; margin-top: 0;}
+#sidebar-first h2 {padding-top: 10px;}
+#block-system-main-menu .content ul.menu {margin:0;}
+#block-system-main-menu .content ul.menu li {margin-left: 0;}
+#block-system-main-menu .content ul.menu li a {padding: 8px 0 10px 8px; width: 100%;}
+body.front #block-system-main-menu, body.not-front #block-system-main-menu {margin-top: -22px;}
+#footer {background-image: url("../../images/alice/wordmark_sm.png"); background-position: 97% 8px; padding-bottom: 0;height: auto;}
+.no-after-content::after{content:''!important;}
+.sidebar .block h2 + .field-content {display:none;}
+}
+
+@media screen and (max-width: 400px) {
+#wordmark.grid_4 {background-size: 100% !important; width: 200px !important; padding-bottom: 6px;}
+body.front #block-system-main-menu {margin-top: 10px;}
+}
+
+
+/*old crap*/
+/* - some styles just for big screens - */
+/*@media screen and (min-width: 601px) {
+#block-views-news-summarynewsblock h2 { background-color: transparent; color: #8A9045 !important; }
+#block-views-news-summarynewsblock { border-top-color:#8A9045 !important; }
+#block-views-news-summarynewsblock a { color: #8A9045; }
+#block-events h2, #block-uceventslist-uceventsblock h2 { color: #800000 !important; }
+#block-events, #block-uceventslist-uceventsblock { border-top:5px solid #800000!important; background-position-y: top !important; }
+}
+*/
+/* - some styles just for small screens - */
+/*@media screen and (max-width: 600px) {
+#dept-title.grid_8 {color: maroon !important; font-family: "ProximaNova-Regular",helvetica,sans-serif; margin-top: 0;}
+#wordmark.grid_4 {float: left; background-size: 332px 15px; margin-top: 4px;}
+#toggle-nav a {background-image: url("../../images/alice/mobilesprite.png") !important; color: #474740 !important;}
+#main {padding-top: 32px;}
+#sidebar-first {background: white !important; border:none; border-top: 1px solid #E1DCD8; margin-top: 0;}
+#sidebar-first h2 {padding-top: 10px;}
+#block-system-main-menu .content ul.menu {margin:0;}
+#block-system-main-menu .content ul.menu li {margin-left: 0;}
+#block-system-main-menu .content ul.menu li a {padding: 8px 0 10px 8px; width: 100%;}
+body.front #block-system-main-menu, body.not-front #block-system-main-menu {margin-top: -22px;}
+#footer {background-image: url("../../images/alice/wordmark_sm.png"); background-position: 97% 8px; height:115px;}
+
+}
+
+@media screen and (max-width: 400px) {
+#wordmark.grid_4 {background-size: 100% !important; width: 200px !important; padding-bottom: 6px;}
+body.front #block-system-main-menu {margin-top: 10px;}
+}*/

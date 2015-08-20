@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Webform strongarm variables feature.
+ */
+
+include_once('webform_strongarm_variables.features.inc');

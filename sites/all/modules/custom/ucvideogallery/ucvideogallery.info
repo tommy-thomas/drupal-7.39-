@@ -1,0 +1,7 @@
+name = Video Gallery Helper
+description = "Provides theming support for the Video Gallery feature"
+core = 7.x
+package = UChicago
+files[] = ucvideogallery.module
+stylesheets[screen][] = css/ucvideogallery.css
+scripts[] = js/ucvideogallery.js

@@ -1,0 +1,22 @@
+.view-business-directory .directory-address p {
+  margin-bottom: 0;
+}
+.views-field-field-bd-cert-types li,
+.views-field-field-bd-cert-agencies li {
+  margin-left: 12px !important;
+  font-size: 10px !important;
+}
+@media only screen and (max-width: 912px) {
+  .views-field-field-bd-cert-types,
+  .views-field-field-bd-cert-agencies {
+    display: none !important;
+  }
+}
+@media only screen and (max-width: 486px) {
+  .views-field-field-bd-address {
+    display: none !important;
+  }
+  .views-field {
+    font-size: 10px !important;
+  }
+}
