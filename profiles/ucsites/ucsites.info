@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 name = UC Sites
 description = Install with commonly used features pre-configured and ucsites modules and features.
+=======
+name = Standard
+description = Install with commonly used features pre-configured.
+>>>>>>> fc258f9c491d7cf998d34f42ebe8c12996f8ceed
 version = VERSION
 core = 7.x
 dependencies[] = block
@@ -34,7 +39,11 @@ dependencies[] = user
 dependencies[] = rdf
 
 ; Information added by Drupal.org packaging script on 2015-08-19
+<<<<<<< HEAD
 version = "7.x"
+=======
+version = "7.39"
+>>>>>>> fc258f9c491d7cf998d34f42ebe8c12996f8ceed
 project = "drupal"
 datestamp = "1440020197"
 

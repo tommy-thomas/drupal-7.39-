@@ -1,7 +1,11 @@
 <?php
 /**
  * @file
+<<<<<<< HEAD
  * Enables modules and site configuration for a ucsites site installation.
+=======
+ * Enables modules and site configuration for a ucsites installation.
+>>>>>>> fc258f9c491d7cf998d34f42ebe8c12996f8ceed
  */
 
 /**
