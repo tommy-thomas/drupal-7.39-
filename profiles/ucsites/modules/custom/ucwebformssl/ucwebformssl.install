@@ -1,0 +1,16 @@
+<?php
+/**
+  * Implements hook_install().
+  */
+function ucwebformssl_install() {
+  // Set the priority of this module so that it executes before SecureLogin
+  $weight = db_select('system', 's')
+    ->fields('s', array('weight'))
+    ->condition('name', 'securelogin', '=')
+    ->execute()
+    ->fetchField();
+  db_update('system')
+    ->fields(array('weight' => $weight - 5))
+    ->condition('name', 'ucwebformssl', '=')
+    ->execute();
+}

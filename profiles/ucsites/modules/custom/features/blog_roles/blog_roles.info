@@ -1,0 +1,12 @@
+name = Blog roles
+description = Roles specific to the blog entry content type
+core = 7.x
+package = Features
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = blog_roles
+dependencies[] = features
+dependencies[] = role_export
+features[features_api][] = api:1
+features[user_role][] = blog moderator
+features[user_role][] = blogger

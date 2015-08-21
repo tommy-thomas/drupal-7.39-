@@ -1,0 +1,19 @@
+<?php
+function ucevents_menu() {
+	$items['events'] = array(
+		'title' => 'Calendar of Events',
+		'description' => 'Monthly calendar view of all upcoming events',
+		'page callback' => 'ucevents_show_calendar',
+    'access arguments' => array('access content'),
+    'menu_name' => 'main-menu',
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+	return $items;
+}
+
+function ucevents_show_calendar() {
+  $calendarid = variable_get('templatron_calendar_id');
+  $calendar_apikey = variable_get('templatron_calendar_api_key');
+  $cal = '<script src="//events.uchicago.edu/widgets/cal.php?key=' . $calendar_apikey . '&id=' . $calendarid. '" type="text/javascript"></script>';
+  return $cal;
+}

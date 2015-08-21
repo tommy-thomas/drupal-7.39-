@@ -1,0 +1,9 @@
+name = UCSiteRequestConfirm
+description = Rule for sending uc site request.
+core = 7.x
+package = UCHICAGO
+php = 5.2.4
+dependencies[] = entity
+dependencies[] = rules
+features[features_api][] = api:1
+features[rules_config][] = rules_send_site_request_email

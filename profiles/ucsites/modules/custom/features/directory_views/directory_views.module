@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Directory views feature.
+ */
+
+include_once('directory_views.features.inc');

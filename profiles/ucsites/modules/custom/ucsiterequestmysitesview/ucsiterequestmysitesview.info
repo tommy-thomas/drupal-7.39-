@@ -1,0 +1,9 @@
+name = ucsiterequestmysitesview
+description = My Sites view for account owners
+core = 7.x
+package = UCHICAGO
+dependencies[] = ctools
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[views_view][] = my_sites

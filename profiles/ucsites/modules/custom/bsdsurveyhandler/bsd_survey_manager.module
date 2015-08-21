@@ -1,0 +1,43 @@
+<?php
+module_load_include('inc', 'bsd_survey_manager', 'bsd_survey_admin');
+module_load_include('inc', 'bsd_survey_manager', 'bsd_survey_confirmation');
+
+/**
+ * Implements hook_form_alter()
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function bsd_survey_manager_form_alter(&$form, &$form_state, $form_id)
+{
+
+    if (strstr($form_id, 'webform_client_form_') && _is_bsd_survey($form, 'financial_toxicity')) {
+        // get the nid so we can use it in the wrapper value
+        $form['#validate'][] = 'bsd_survey_manager_form_validate';
+    }
+}
+
+/**
+ * Implements hook_form_validate()
+ * @param $form
+ * @param $form_state
+ */
+function bsd_survey_manager_form_validate($form, &$form_state)
+{
+    // if we have a sid then we know the form was properly submitted, otherwise, we'll just return the existing $form array
+    if (_is_bsd_survey($form, 'financial_toxicity')) {
+        // first we have to load up the webform node object
+        $answers = array_filter($form_state['values']['submitted']['financial_toxicity'], 'strlen');
+        $total = count($answers);
+        if (!isset($answers) || $total < 6) {
+            // create an array up with the confirmation message, retrieved from the webform node
+            form_set_error('error', 'error');
+        }
+    }
+}
+
+function _is_bsd_survey($form, $key)
+{
+    return isset($form['#node']) && $form['#node']->webform['components'][1]['form_key'] == $key;
+}
+

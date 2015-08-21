@@ -1,0 +1,16 @@
+.node-clas-directory-entry .field-label {
+  font-family: 'ProximaNova-Bold','Helvetica Neue',Helvetica,Arial,sans-serif;
+  margin-top: 1.5em;
+}
+
+.node-clas-directory-entry .field-label:first-child {
+  margin-top: 0;
+}
+
+.view-clas-directory .attachment {
+  margin-bottom: 1em;
+}
+
+.maincontent .view-clas-directory table td, .maincontent .view-clas-directory table th {
+  line-height: 1.2857em;
+}

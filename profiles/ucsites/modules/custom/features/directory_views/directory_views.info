@@ -1,0 +1,12 @@
+name = Directory views
+description = Views used by directories
+core = 7.x
+package = Features
+php = 5.2.4
+version = 7.x-1.0-beta4
+project = directory_views
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[views_view][] = directory
+mtime = 1417535451

@@ -1,0 +1,119 @@
+; Drupal's .info files allow themers to easily specify some of the static
+; properties of your theme. Properties such as its name, stylesheets,
+; javascripts, and block regions.
+;
+; Drupal 7 stores a cache of the data in this .info files. If you modify any
+; lines in this file, you MUST refresh Drupal 7's cache by simply visiting the
+; Appearance page at admin/appearance.
+
+
+
+; The name, description and screenshot used for this theme on the Appearance
+; page at admin/appearance.
+
+screenshot  = screenshot.png
+name        = BSD Plaisance
+description = A variation on the Plaisance theme for the BSD
+
+
+
+; This theme is compatible with Drupal 7 core. And it is a sub-theme of Zen.
+
+core        = 7.x
+base theme  = plaisance
+
+
+
+; This section controls the CSS files for your theme. There are 3 different
+; things you can do with a "stylesheets" line:
+; - Add a new stylesheet for your theme.
+; - Override a module's stylesheet. If the stylesheet you are adding uses the
+;   same filename as a stylesheet from a Drupal core or contrib module, your CSS
+;   file will be used instead of the module's file.
+; - Remove a module's stylesheet. If you specify the name of a Drupal core or
+;   contrib module's stylesheets, Drupal will remove that stylesheet if you do
+;   NOT include a file with that name with your theme.
+;
+; stylesheets[MEDIA][] = FILE
+;
+; The "FILE" is the name of the stylesheet to add/override/remove.
+; The "MEDIA" in the first set of brackets is a media type or a media query.
+; Typical CSS media types include "all", "screen", "print", and "handheld". A
+; typical media query is "screen and (max-width: 320px)".
+
+stylesheets[screen][] = css/overrides.css
+
+; Built-in conditional stylesheet support has been removed from Zen 7.x-5.x.
+; Instead, Zen now adds conditional-comment-included classes to the html
+; element, such as .lt-ie9, .lt-ie8, .lt-ie7. More information on this
+; technique can be found at:
+; http://paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/
+;
+; If you still wish to use conditional stylesheets, you must install the
+; conditional stylesheets module: http://drupal.org/project/conditional_styles
+;stylesheets-conditional[lte IE 8][all][] = css/ie8.css
+
+
+
+; Optionally add some JavaScripts to your theme.
+
+
+
+; Define regions
+
+regions[topnav]         = Top Nav
+regions[hero_features]  = Hero features
+regions[home_features]  = Homepage features
+regions[home_center]    = Homepage center column
+regions[interior_features] = Interior features
+regions[highlighted]    = Highlighted
+regions[help]           = Help
+regions[content]        = Content
+regions[sidebar_first]  = First sidebar
+regions[sidebar_second] = Second sidebar
+
+regions[footer_column1] = Footer first column
+regions[footer_column2] = Footer second column
+regions[footer_column3] = Footer third column
+regions[footer_column4] = Footer fourth column
+
+; The page_top and page_bottom regions are hidden, which means they will not
+; show up on the blocks administration page. But they are required in order for
+; the html.tpl.php to work properly, so do not delete them.
+
+regions[page_top]       = Page top
+regions[page_bottom]    = Page bottom
+
+
+
+; Various page elements output by the theme can be toggled on and off. The
+; "features" control which of these check boxes display on the
+; admin/appearance config page. This is useful for suppressing check boxes
+; for elements not used by your sub-theme. To suppress a check box, omit the
+; entry for it below. See the Drupal 7 Theme Guide for more info:
+; http://drupal.org/node/171205#features
+
+features[] = logo
+features[] = name
+;features[] = slogan
+;features[] = node_user_picture
+;features[] = comment_user_picture
+;features[] = favicon
+features[] = main_menu
+;features[] = secondary_menu
+features[] = comment_user_verification
+
+
+
+; Set the default values of settings on the theme-settings.php form.
+settings[zen_rebuild_registry]     = 0
+
+
+; To make this sub-theme an admin theme with shortcut links next to titles,
+; uncomment the line below.
+
+;settings[shortcut_module_link]    = 1
+
+; To add a Panels layout (which can also be used by Display Suite), uncomment
+; the line below and see the documentation at: http://drupal.org/node/495654
+;plugins[panels][layouts] = layouts

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Directory listing content type feature.
+ */
+
+include_once('directory_listing_content_type.features.inc');

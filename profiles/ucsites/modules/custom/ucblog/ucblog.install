@@ -1,0 +1,51 @@
+<?php
+/**
+* Implements hook_install().
+* Set initial positions of blog-related blocks.
+*/
+function ucblog_install() {
+  // Insert records to initiall position the blog blocks
+  // Might want to first check and see if they exist just in case
+  $update_blog_block1 = db_insert('block') // Table name no longer needs {}
+    ->fields(array(
+      'module' => 'views',
+      'delta' => 'blog-blog_archives_block',
+      'theme' => 'uchicago',
+      'status' => 1,
+      'weight' => 0,
+      'custom' => 0,
+      'region' => 'sidebar_second',
+      'pages' => "blog\r\nblog/*",
+      'visibility' => 1,
+      'cache' => -1,
+    ))
+    ->execute();
+  $update_blog_block2 = db_insert('block') // Table name no longer needs {}
+    ->fields(array(
+      'module' => 'views',
+      'delta' => 'blog-blog_categories_block',
+      'theme' => 'uchicago',
+      'status' => 1,
+      'weight' => 0,
+      'custom' => 0,
+      'region' => 'sidebar_second',
+      'pages' => "blog\r\nblog/*",
+      'visibility' => 1,
+      'cache' => -1,
+    ))
+    ->execute();
+  $update_blog_block3 = db_insert('block') // Table name no longer needs {}
+    ->fields(array(
+      'module' => 'views',
+      'delta' => 'blog-blog_recent_posts_block',
+      'theme' => 'uchicago',
+      'status' => 1,
+      'weight' => 0,
+      'custom' => 0,
+      'region' => 'sidebar_second',
+      'pages' => "blog\r\nblog/*",
+      'visibility' => 1,
+      'cache' => -1,
+    ))
+    ->execute();
+}

@@ -1,0 +1,12 @@
+name = UCSiteRequestFormView
+description = View of site request data.
+core = 7.x
+package = UChicago
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = ucsiterequestformview
+dependencies[] = ctools
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[views_view][] = uc_site_request_view

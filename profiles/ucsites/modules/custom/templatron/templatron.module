@@ -1,0 +1,899 @@
+<?php
+/**
+  * Implements hook_help().
+  * Provides basic information about this module to the help hook.
+  */
+function templatron_help($path, $arg) {
+  if ($path == 'admin/help#templatron') {
+    return t('A module that provides additional functionality for UChicago Sites.');
+  }
+}
+
+/**
+  * Implements hook_menu().
+  * Creates a site settings screen, accessible by site owners, an access denied screen,
+  * and a menu item for clearing page and block caches.
+  */
+function templatron_menu() {
+  $items = array();
+  $items['admin/config/content/ucsites'] = array(
+    'title' => 'Site Settings and Features',
+    'description' => 'Features and configuration settings for your UChicago Site.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('templatron_settings_form'),
+    'access arguments' => array('administer nodes'), // Site owners can access the site settings form
+    'type' => MENU_NORMAL_ITEM,
+  );
+  // Callback for handling access denied redirection.
+  // This defines a page at /templatron/denied, which is set as the 403 page in each site's configuration.
+  $items['templatron/denied'] = array(
+    'access callback' => TRUE,
+    'page callback' => 'templatron_denied',
+    'title' => 'Access denied',
+    'type' => MENU_CALLBACK,
+  );
+  $items['templatron/cacheclear'] = array(
+    'title' => 'Clear page and block caches',
+    'page callback' => 'templatron_cacheclear',
+    'access arguments' => array('clear page and block caches'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+  * Form builder; Create and display the site settings form.
+  */
+function templatron_settings_form($form, &$form_state) {
+  // Find out if the metatag module is enabled already
+  $metatag_enabled = module_exists('metatag');
+  // Find out if aggregator is enabled already
+  $aggregator_enabled = module_exists('aggregator');
+  // Find out if blogs are actually enabled already
+  $blogs_enabled = module_exists('blog_entry_content_type');
+  // Find out if hero features are enabled already
+  $hero_features_enabled = module_exists('hero_feature_content_type');
+
+  // Determine the default theme and colorscheme
+  $default_theme = variable_get('theme_default');
+  switch($default_theme) {
+    case 'uchicago':
+      $settings = variable_get('theme_uchicago_settings');
+      $colorscheme = $settings['colorscheme'];
+      if ($colorscheme == 'light') {
+        $default_theme = $default_theme . '_' . $colorscheme;
+      }
+      break;
+    case 'plaisance':
+      break;
+    default:
+      $default_theme = 'other';
+  }
+
+  // Determine the image sizes of all homepage feature images, and alert the user if their images are too small for the "large format."
+  $dimensions_alert = FALSE;
+  $small_nodes = '<ul>';
+  // Create a new EntityFieldQuery.
+  // http://drupal.org/node/1343708
+  $query = new EntityFieldQuery();
+  // Get the first five nodes of type homepage_feature which are published, sorted by stickiness and create date.
+  $query->entityCondition('entity_type', 'node')
+  ->entityCondition('bundle', 'homepage_feature')
+  ->propertyCondition('status', 1)
+  ->propertyOrderBy('sticky', 'DESC')
+  ->propertyOrderBy('created', 'DESC')
+  ->range(0,5)
+  ->addMetaData('account', user_load(1));
+  $result = $query->execute();
+  // If there are published homepage features, check the image sizes
+  if (!empty($result)) {
+    foreach ($result['node'] as $id => $node) {
+      $node = node_load($node->nid);
+      $img_width = $node->field_homeimage['und'][0]['width'];
+      $img_height = $node->field_homeimage['und'][0]['height'];
+      if ($img_width < 900 || $img_height < 400) {
+        $dimensions_alert = TRUE; // Alert the user that their images are too small.
+        $small_nodes .= '<li><a href="/node/' . $node->nid . '">' . $node->title . '</a></li>';
+      }
+    }
+  }
+  $small_nodes .= '</ul>';
+  if ($dimensions_alert) {
+  $templatron_homefeature_image_size_description = '<strong>IMAGE CHECK: <span style="color:red;">IMAGES ARE TOO SMALL</span></strong><br />The images you are currently displaying in one or more of your homepage features are not large enough to be used in the "large" format. For best results, upload homepage feature images at least 900 pixels wide and 400 pixels high before changing this setting. These features need to be updated:' . $small_nodes;
+  } else {
+    $templatron_homefeature_image_size_description = '<strong>IMAGE CHECK: <span style="color:green;">OK</span></strong><br />Your homepage feature images are large enough to be displayed in the "large" format.';
+  }
+
+  // The enabled theme
+  if($default_theme == 'other') {
+    $form['theme_default'] = array(
+      '#type' => 'select',
+      '#title' => t('Theme'),
+      '#options' => array(
+        'uchicago' => t('Phoenix'),
+        'uchicago_light' => t('Phoenix - Light'),
+        'plaisance' => t('Plaisance'),
+        'other' => t('Other'),
+      ),
+      '#default_value' => $default_theme,
+      '#description' => t('Select a theme to be used throughout your site.'),
+    );
+  } else {
+    $form['theme_default'] = array(
+      '#type' => 'select',
+      '#title' => t('Theme'),
+      '#options' => array(
+        'uchicago' => t('Phoenix'),
+        'uchicago_light' => t('Phoenix - Light'),
+        'plaisance' => t('Plaisance'),
+      ),
+      '#default_value' => $default_theme,
+      '#description' => t('Select a theme to be used throughout your site.'),
+    );
+  }
+  // Fieldset to contain all Plaisance settings
+  $form['plaisance_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Plaisance theme settings',
+    '#description' => t('These settings apply only to sites with the Plaisance theme enabled.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  // Text field for the site name
+  // templatron_site_name is a custom variable that allows for line breaks, but we use it to populate site_name after we strip out special tags which the user can enter to indicate where there should be a line break
+  // If templatron_site_name isn't set, then use the site_name as the default
+  $default_site_name = variable_get('templatron_site_name', NULL);
+  if (empty($default_site_name)) { $default_site_name = variable_get('site_name', NULL); }
+  $form['plaisance_settings']['templatron_site_name'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Site name'), 
+    '#default_value' => $default_site_name, 
+    '#size' => 100,
+    '#maxlength' => 128,
+    '#required' => TRUE,
+    '#description' => t('The site name appears in the masthead and in the footer. To force a line break in the header, include "[br]" where you want the line break to appear, e.g. "This is[br]Your Site Name".'),
+  );
+  // Dropdown for the masthead font size
+  $form['plaisance_settings']['templatron_site_name_size'] = array(
+    '#type' => 'select',
+    '#title' => t('Masthead font size'),
+    '#options' => array(
+      'small' => t('Small'),
+      'medium' => t('Medium'),
+      'large' => t('Large'),
+    ),
+    '#default_value' => variable_get('templatron_site_name_size', 'medium'),
+    '#description' => t('If your site name is very long, you may need to select a smaller font size for your masthead.'),
+  );
+  // Dropdown for the homepage feature image size
+  $form['plaisance_settings']['templatron_homefeature_image_size'] = array(
+    '#type' => 'select',
+    '#title' => t('Would you like to display large or small images in your homepage features?'),
+    '#options' => array(
+      'small' => t('Small'),
+      'large' => t('Large'),
+    ),
+    '#default_value' => variable_get('templatron_homefeature_image_size', 'small'),
+    '#description' => t($templatron_homefeature_image_size_description),
+  );
+  // Dropdown for the navigation style
+  $form['plaisance_settings']['templatron_navigation'] = array(
+    '#type' => 'select',
+    '#title' => t('Would you like to display the navigation across the top of your page or along the left side?'),
+    '#options' => array(
+      'left' => t('Left'),
+      'top' => t('Top'),
+    ),
+    '#default_value' => variable_get('templatron_navigation', 'left'),
+    '#description' => t('<strong>Please note:</strong> If you choose "top" navigation and you have a large number of top level navigation links, the navigation may wrap to multiple lines. For best results, limit your top level links to no more than 5-7 links.'),
+  );  
+  // Fieldset to contain the logo
+  $form['logo'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Plaisance theme logo',
+    '#description' => t('If you upload a logo, it will be displayed in the left column of your homepage, just below your site navigation. For best results, logo images should be no wider than 300 pixels.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  // Upload a logo
+  $form['logo']['templatron_logo'] = array(
+        '#type' => 'file',
+        '#title' => t('Upload a new logo'),
+        '#description' => t('The allowed file types are jpg, jpeg, png, gif.'),
+  );
+  // The path to the existing logo, if any
+  $form['logo']['templatron_logo_path'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Path to your logo'), 
+    '#default_value' => variable_get('templatron_logo_path'), 
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#required' => FALSE,
+    '#description' => t('Delete this field if you do not want to display a logo. If you are uploading a new logo image, this field will be populated automatically.'),
+  );
+  // Fieldset to contain features
+  $form['features'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Features',
+    '#description' => t('Enable additional functionality on your UChicago Site.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  // Enable the metatag module
+  $form['features']['templatron_enable_metatag'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => $metatag_enabled,
+    '#title' => t('Metatags'),
+    '#description' => t('Enabling the Metatag module will give you the ability to display meta descriptions and/or keywords in the source code of your site.'),
+    '#required' => FALSE,
+  );
+  // Enable the aggregator
+  $form['features']['templatron_enable_aggregator'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => $aggregator_enabled,
+    '#title' => t('RSS aggregator'),
+    '#description' => t('Enabling the RSS aggregator will give you the ability to import RSS feeds and display their content on your site. Once enabled, you can configure the aggregator by clicking "Configure" in your toolbar and then clicking the "Feed aggregator" link.'),
+    '#required' => FALSE,
+  );
+  // Enable the blog
+  $form['features']['ucsites_enable_blog'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => variable_get('ucsites_enable_blog', $blogs_enabled),
+    '#title' => t('Blog'),
+    '#description' => t('Check this box to add a blog to your site. Once enabled, your blog will be available at http://yoursite.uchicago.edu/blog. A menu link to your blog will be automatically added to your navigation but can be removed anytime by clicking "Edit left navigation" in your toolbar and disabling the Blog link.'),
+    '#required' => FALSE,
+  );
+  // Enable hero features
+  $form['features']['templatron_enable_hero_features'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => $hero_features_enabled,
+    '#title' => t('Hero features'),
+    '#description' => t('Check this box to add "hero" features. This creates a new content type which lets you add full width images to your homepage, similar to what you see at <a href="http://www.uchicago.edu">http://www.uchicago.edu</a>. It is recommended that you publish either hero features or homepage features, but not both at the same time.'),
+    '#required' => FALSE,
+    '#disabled' => $hero_features_enabled,
+  );
+  // Fieldset to contain the calendar variables. These variables are used by the ucevents and uceventslist modules.
+  $form['calendar'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Event calendar settings',
+    '#description' => t('If you know your event calendar API key and widget IDs, enter them below. Otherwise, please use the Feedback and Support link in your toolbar to request that these be added to your site.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  // Calendar API key
+  $form['calendar']['templatron_calendar_api_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Events calendar API key'),
+    '#default_value' => variable_get('templatron_calendar_api_key'),
+    '#size' => 50,
+    '#maxlength' => 128,
+    '#required' => FALSE,
+  );
+  // Full calendar widget ID
+  $form['calendar']['templatron_calendar_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Events calendar widget ID'),
+    '#default_value' => variable_get('templatron_calendar_id'),
+    '#size' => 10,
+    '#maxlength' => 128,
+    '#required' => FALSE,
+  );  
+  // List calendar widget ID
+  $form['calendar']['templatron_calendar_list_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Events list widget ID'),
+    '#default_value' => variable_get('templatron_calendar_list_id'),
+    '#size' => 10,
+    '#maxlength' => 128,
+    '#required' => FALSE,
+  );
+  // RSS Calendar widget ID
+  $form['calendar']['templatron_calendar_rss_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Events RSS widget ID'),
+    '#default_value' => variable_get('templatron_calendar_rss_id'),
+    '#size' => 10,
+    '#maxlength' => 128,
+    '#required' => FALSE,
+  );
+
+  // Submit button
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings'),
+    '#submit' => array('templatron_settings_form_submit', 'drupal_flush_all_caches'), // Flush all caches after submitting
+  );
+
+  return $form;
+}
+
+// Validate the form submission by checking for a valid logo image and checking to see if any blog entries exist before disabling the blog feature.
+// http://drupal.org/node/1537950
+// http://api.drupal.org/api/examples/form_example%21form_example_tutorial.inc/function/form_example_tutorial_10_validate/7
+function templatron_settings_form_validate($form, &$form_state) {
+  // Validate the logo image
+  $file = file_save_upload('templatron_logo', array(
+    'file_validate_is_image' => array(),
+    'file_validate_extensions' => array('png gif jpg jpeg'),
+  ));
+  if ($file) {
+    if ($file = file_unmanaged_copy($file->uri, 'public://')) { // Move the file to the site's file folder
+      // Save the file for use in the submit handler.
+      $form_state['storage']['templatron_logo_path'] = $file;
+    }
+    else {
+      form_set_error('file', t('Failed to write the uploaded file to the site\'s file folder.'));
+    }
+  }
+
+  // Check to see if any nodes of type blog_entry exist. If so, do not allow the user to disable the blog feature.
+  // First, check to see if the user is trying to disable the blog feature
+  $enable_blog = $form_state['values']['ucsites_enable_blog'];
+  if(!$enable_blog) {
+    // If so, build a query to find any nodes of type blog_entry
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'blog_entry')
+    ->addMetaData('account', user_load(1));
+    $result = $query->execute();
+    // If any blog_entry nodes exist, send an error to the user
+    if (!empty($result)) {
+      form_set_error('ucsites_enable_blog', t('You must delete all blog entries before disabling the blog feature.'));
+    }
+  }
+}
+
+/**
+  * Save the configuration settings.
+  * File save example here:
+  * http://api.drupal.org/api/examples/form_example%21form_example_tutorial.inc/function/form_example_tutorial_10_submit/7
+  */
+function templatron_settings_form_submit($form, &$form_state) {
+  // Set the default theme and color scheme
+  switch($form_state['values']['theme_default']) {
+    case 'uchicago':
+      variable_set('theme_default', 'uchicago');
+      $settings = variable_get('theme_uchicago_settings');
+      $settings['colorscheme'] = 'phoenix';
+      variable_set('theme_uchicago_settings', $settings);
+      break;
+    case 'uchicago_light':
+      variable_set('theme_default', 'uchicago');
+      $settings = variable_get('theme_uchicago_settings');
+      $settings['colorscheme'] = 'light';
+      variable_set('theme_uchicago_settings', $settings);
+      break;
+    case 'plaisance':
+      // First, find out if it's enabled.
+      $themes = list_themes();
+      if ($themes['plaisance']->status == 0) {
+        // If it's not enabled yet, enable it.
+        theme_enable(array('plaisance'));
+      }
+      variable_set('theme_default', 'plaisance');
+      break;
+    case 'other':
+      // If they are not using one of the three public themes, then do not do anything here. Those themes are assigned by an admin the normal way.
+      break;
+  }
+
+  // Set the easy variables
+  variable_set('templatron_site_name_size', $form_state['values']['templatron_site_name_size']);
+  variable_set('ucsites_enable_blog', $form_state['values']['ucsites_enable_blog']);
+  variable_set('templatron_homefeature_image_size', $form_state['values']['templatron_homefeature_image_size']);
+  variable_set('templatron_logo_path', check_plain($form_state['values']['templatron_logo_path']));
+  variable_set('templatron_navigation', $form_state['values']['templatron_navigation']);
+
+  // Set the site_name variable and the templatron_site_name variable (which allows a line break and small tags)
+  // First, set the templatron_site_name as-is. Before being displayed, it is made safe using the check_plain function in template.php
+  variable_set('templatron_site_name', $form_state['values']['templatron_site_name']);
+  // Then, create a variable for the proper site name without any line breaks or small tags.
+  $new_site_name = str_replace('[br]', ' ', $form_state['values']['templatron_site_name']);
+  $new_site_name = str_replace('[sm]', '', $new_site_name);
+  $new_site_name = str_replace('[/sm]', '', $new_site_name);
+  // And then set the site name to that variable. The site name appears in the title tag and on the user login screen.
+  variable_set('site_name', $new_site_name);
+
+  // Check to see if a logo was uploaded successfully
+  if(isset($form_state['storage']['templatron_logo_path'])) {
+    $file = $form_state['storage']['templatron_logo_path'];
+    // If a logo was uploaded, set the templatron_logo variable to the logo file path, e.g. public://logo.png
+    variable_set('templatron_logo_path', $file);
+    // Unset the variable since we don't need it anymore. Not exactly sure if this step is necessary.
+    unset($form_state['storage']['templatron_logo_path']);
+  }
+
+  // Set calendar variables
+  variable_set('templatron_calendar_api_key', check_plain($form_state['values']['templatron_calendar_api_key']));
+  variable_set('templatron_calendar_id', check_plain($form_state['values']['templatron_calendar_id']));
+  variable_set('templatron_calendar_list_id', check_plain($form_state['values']['templatron_calendar_list_id']));
+  variable_set('templatron_calendar_rss_id', check_plain($form_state['values']['templatron_calendar_rss_id']));
+
+  // Enable the metatag module
+  if ($form_state['values']['templatron_enable_metatag'] == TRUE) {
+    if (!module_exists('metatag')) {
+      module_enable(array('name' => 'metatag'));
+      // Add the appropriate permissions
+      user_role_grant_permissions(235655953, array('administer meta tags', 'edit meta tags'));
+      user_role_grant_permissions(212870258, array('administer meta tags', 'edit meta tags'));
+      user_role_grant_permissions(61522925, array('edit meta tags'));
+      user_role_grant_permissions(210394380, array('edit meta tags'));
+      user_role_grant_permissions(254633039, array('edit meta tags'));
+      user_role_grant_permissions(266833737, array('edit meta tags'));
+      drupal_set_message('The Metatag module has been enabled. You can configure default settings for the Metatag module in the <a href="/admin/config/search/metatags">Metatag configuration panel</a>.');
+    }
+  } else {
+    if (module_exists('metatag')) {
+      module_disable(array('name' => 'metatag'));
+    }    
+  }
+
+  // Enable the aggregator
+  if ($form_state['values']['templatron_enable_aggregator'] == TRUE) {
+    if (!module_exists('aggregator')) {
+      module_enable(array('name' => 'aggregator'));
+      // Add the appropriate permissions
+      user_role_grant_permissions(235655953, array('administer news feeds'));
+      user_role_grant_permissions(1, array('access news feeds'));
+      user_role_grant_permissions(2, array('access news feeds'));
+    }
+  } else {
+    if (module_exists('aggregator')) {
+      module_disable(array('name' => 'aggregator'));
+    }    
+  }
+
+  // Enable all blog-related features and modules
+  if ($form_state['values']['ucsites_enable_blog'] == TRUE) {
+    if (!module_exists('blog_entry_content_type')) {
+      module_enable(array('name' => 'blog_entry_content_type'));
+    }
+    drupal_flush_all_caches();
+    if (!module_exists('blog_permissions')) {
+      module_enable(array('name' => 'blog_permissions'));
+      // If the blog was enabled and then disabled, blog permissions would have been revoked at that time. Since the permissions are not reinstated when the blog_permissions module is re-enabled, we have to revert the feature.
+      features_revert(array('blog_permissions' => array('user_permission')));
+    }
+    if (!module_exists('blog_views')) {
+      module_enable(array('name' => 'blog_views'));
+    }
+    if (!module_exists('blog_workflow')) {
+      module_enable(array('name' => 'blog_workflow'));
+    }
+    if (!module_exists('ucblog')) {
+      module_enable(array('name' => 'ucblog'));
+    }
+    if (!module_exists('comment')) {
+      module_enable(array('name' => 'comment'));
+    }
+    if (!module_exists('permissions_comments')) {
+      module_enable(array('name' => 'permissions_comments'));
+    }
+  } else {
+    // Disable some of the blog-related features, most importantly blog_views (which provides the page at /blog).
+    // The rest of the blog-related features can stay enabled.
+    if (module_exists('blog_views')) {
+      module_disable(array('name' => 'blog_views'));
+    }
+    if (module_exists('blog_permissions')) {
+      module_disable(array('name' => 'blog_permissions'));
+    }
+    if (module_exists('ucblog')) {
+      module_disable(array('name' => 'ucblog'));
+    }
+    // Since we can't delete the content type (http://drupal.org/node/1055460) and disabling the blog_permissions module does not revoke the blog permissions, manually revoke these permissions so that no one can create new blog entries.
+    $blog_permissions_array = array(
+      'assign blog moderator role',
+      'assign blogger role',
+      'create blog_entry content',
+      'delete any blog_entry content',
+      'delete own blog_entry content',
+      'edit any blog_entry content',
+      'edit own blog_entry content',
+      'enter blog_entry revision log entry',
+      'override blog_entry authored by option',
+      'override blog_entry authored on option',
+      'override blog_entry promote to front page option',
+      'override blog_entry published option',
+      'override blog_entry revision option',
+      'override blog_entry sticky option',
+      'view any unpublished blog_entry content'
+    );
+    user_role_revoke_permissions(210394380, $blog_permissions_array); // blogger
+    user_role_revoke_permissions(266833737, $blog_permissions_array); // blog moderator
+    user_role_revoke_permissions(235655953, $blog_permissions_array); // site owner
+  }
+
+  // Enable hero features
+  if ($form_state['values']['templatron_enable_hero_features'] == TRUE) {
+    if (!module_exists('hero_feature_content_type')) {
+      module_enable(array('name' => 'hero_feature_content_type'));
+      node_types_rebuild();
+      // Add permissions for site owners
+      user_role_grant_permissions(235655953, array(
+        'create hero_feature content',
+        'delete any hero_feature content',
+        'delete own hero_feature content',
+        'edit any hero_feature content',
+        'edit own hero_feature content'
+      ));
+
+      // Add permissions for content editors
+      user_role_grant_permissions(254633039, array(
+        'create hero_feature content',
+        'delete any hero_feature content',
+        'delete own hero_feature content',
+        'edit any hero_feature content',
+        'edit own hero_feature content',
+        'enter hero_feature revision log entry',
+        'override hero_feature published option',
+        'override hero_feature revision option',
+        'override hero_feature sticky option'
+      ));
+
+      // Add permissions for content contributors
+      user_role_grant_permissions(61522925, array(
+        'create hero_feature content',
+        'delete own hero_feature content',
+        'edit own hero_feature content'
+      ));
+      drupal_set_message('The "hero features" content type has been created. You can now add hero features by clicking on "Add content" in your toolbar. It is recommended that you unpublish all regular features before publishing any hero features.');
+    }
+    if (!module_exists('hero_feature_views')) {
+      module_enable(array('name' => 'hero_feature_views'));
+    }
+
+  } else {
+    if (module_exists('hero_feature_content_type')) {
+      //module_disable(array('name' => 'hero_feature_content_type'));
+    }    
+  }
+
+  _templatron_purge_varnish();
+  drupal_set_message(t('Your settings have been saved.'));
+}
+
+/**
+* Implements hook_entity_info_alter().
+* This function defines two new view modes, both of which are primarily
+*	used by directories.
+*/
+function templatron_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['expanded'] = array(
+    'label' => t('Expanded'),
+    'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['compact'] = array(
+    'label' => t('Compact'),
+    'custom settings' => TRUE,
+  );  
+}
+
+/**
+  * Implements hook_form_alter().
+  * Change the language on the user login block.
+  */
+function templatron_form_user_login_block_alter(&$form, &$form_state, $form_id) {
+  $form['links']['#markup'] = 'Log in with your CNet ID and password.';
+}
+
+/**
+  * Implements hook_permission().
+  * This function creates permissions for allowing access to College IT and History color schemes,
+  * and for clearing page and block caches.
+  */
+function templatron_permission() {
+  return array(
+    'allow college themes' => array(
+      'title' => t('Allow College themes'),
+      'description' => t('Allow this user to select a College theme'),
+    ),
+    'allow history theme' => array(
+      'title' => t('Allow History theme'),
+      'description' => t('Allow this user to select the History theme'),
+    ),
+    'clear page and block caches' => array(
+      'title' => t('Clear page and block caches'),
+      'description' => t('Allow users to clear page and block caches'),
+    ),
+  );
+}
+
+/**
+ * Defines an access denied page which has a user login block.
+ * This is the page callback function for one of the items declared earlier in templatron_menu.
+ */
+function templatron_denied() {
+  if ($GLOBALS['user']->uid == 0) {
+    drupal_set_title(t('Sign In'));
+    // Output the user login form.
+    $output = drupal_get_form('user_login');
+    drupal_set_page_content($output);
+    // Return page attributes, hide blocks.
+    $page = element_info('page');
+    $page['#templatron_denied'] = TRUE;
+  }
+  else {
+    drupal_set_title(t('Access Denied'));
+    $page = theme('tt_access_denied');
+  }
+  return $page;
+}
+
+/**
+* Defines a function which clears page and block caches.
+* This is the page callback function for /templatron/cacheclear
+*/
+function templatron_cacheclear() {
+  // Clear page and block caches
+  cache_clear_all('*', 'cache_page', TRUE);
+  cache_clear_all('*', 'cache_block', TRUE);
+  
+  // Set a success message
+  drupal_set_message(t('Successfully cleared caches'));
+
+  // Send back home
+  drupal_goto();
+}
+
+/**
+ * Implement hook_page_alter().
+ * Set the 403 sign in message.
+ */
+function templatron_page_alter(&$page) {
+  $current_theme = variable_get('theme_default', 'none');
+
+  // Set regions for the Plaisance theme and leave all the other themes alone
+  if ($current_theme == 'plaisance' || $current_theme == 'plaisance_college' || $current_theme == 'ul_plaisance' || $current_theme == 'plaisance_bsd') {    
+    // Define variables for the full left nav and navigation style
+    $templatron_navigation = variable_get('templatron_navigation', 'left');
+    $navigation_menu = module_invoke('system', 'block_view', 'main-menu');
+    $navigation_menu = render($navigation_menu);
+
+    if ($templatron_navigation == 'top') {
+      // Render a menu that starts at the second level
+      // https://www.drupal.org/node/685664#comment-6844558
+      $leftnav = '';
+      $menuItems = menu_tree_page_data('main-menu');
+      foreach($menuItems as $key => $m) {
+        if ($m['link']['in_active_trail'] && $menuItems[$key]['below']) {
+          $output = menu_tree_output($menuItems[$key]['below']);
+          $leftnav = render($output);
+          unset($output);
+        }
+      }
+
+      // If there are second level menu items, then add them to the top of the left_nav region
+      if ($leftnav) {
+        if (!isset($page['left_nav'])) {
+          $page['left_nav'] = array();
+          $page['left_nav']['#region'] = 'left_nav';
+          $page['left_nav']['leftnav'] = array();
+          $page['left_nav']['leftnav']['#markup'] = $leftnav;
+          $page['left_nav']['#sorted'] = FALSE;
+        } else {
+          $page['left_nav']['leftnav'] = array();
+          $page['left_nav']['leftnav']['#markup'] = $leftnav;
+          $page['left_nav']['leftnav']['#weight'] = -10;
+          $page['left_nav']['#sorted'] = FALSE;
+        }
+      }
+    }
+
+    if ($templatron_navigation == 'left' && $navigation_menu) {
+      $leftnav = $navigation_menu;
+      if (!isset($page['left_nav'])) {
+        $page['left_nav'] = array();
+        $page['left_nav']['#region'] = 'left_nav';
+        $page['left_nav']['leftnav'] = array();
+        $page['left_nav']['leftnav']['#markup'] = $leftnav;
+        $page['left_nav']['#sorted'] = FALSE;
+      } else {
+        $page['left_nav']['leftnav'] = array();
+        $page['left_nav']['leftnav']['#markup'] = $leftnav;
+        $page['left_nav']['leftnav']['#weight'] = -10;
+        $page['left_nav']['#sorted'] = FALSE;
+      }  
+    }
+
+    // If the left nav is being rendered or if a logo is present on the homepage, trick Drupal into thinking the first sidebar is present so that body classes work as expected
+    if (!isset($page['sidebar_first'])) { 
+      $is_front = drupal_is_front_page();
+      $templatron_logo_path = variable_get('templatron_logo_path');
+      if ($templatron_logo_path) {
+        // If the logo exists, set the variable to the full path to the logo image
+        $templatron_logo = file_create_url($templatron_logo_path);
+      }
+      if (isset($templatron_logo) && $is_front || isset($page['left_nav'])) {
+        $page['sidebar_first'] = array();
+        $page['sidebar_first']['#region'] = 'sidebar_first';
+      }
+    }
+
+    // Remove the second sidebar when the fullwidth field is set
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $node = node_load(arg(1));
+      if (isset($node->field_fullwidth['und'][0]['value'])) {
+        if ($node->field_fullwidth['und'][0]['value'] == 1) {
+          unset($page['sidebar_second']);
+        }
+      }
+
+      // If this is a hero feature node page, hide all the columns
+      if ($node->type == 'hero_feature') {
+        unset($page['sidebar_first']);
+        unset($page['sidebar_second']);
+      }
+
+      // If this is an image gallery, hide the right column
+      if ($node->type == 'image_gallery') {
+        unset($page['sidebar_second']);
+      }
+    }
+
+    // Disable the second column on directory pages
+    if (strtolower(arg(0)) == 'directories' && (strtolower(arg(1)) == 'full' || strtolower(arg(1)) == 'compact')) {
+      unset($page['sidebar_second']);
+    }
+
+  } // End region settings for the Plaisance theme
+
+  if (isset($page['#templatron_denied'])) {
+    drupal_set_message(t('Please sign in with a valid CNet ID and password to access this page.'), 'error');
+    // Allow overriding the removal of the sidebars, since there's no way to
+    // override this in the theme.
+    unset($page['left_nav'], $page['sidebar_first'], $page['sidebar_second']);
+  }
+}
+
+/**
+ * Theme the Access Denied message.
+ */
+function theme_tt_access_denied($variables) {
+  return t('You are not authorized to access this page.');
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter().
+ * Enforce private file uploads on new webform file fields.
+ */
+function templatron_form_webform_component_edit_form_alter(&$form, &$form_state, $form_id) {
+  // Check to see if this is a file field
+  if ($form['type']['#value'] == 'file') {
+    // Check to see if a private file system has been defined
+    $private_path = variable_get('file_private_path');
+    if (!$private_path) {
+      $form['#access'] = FALSE;
+      drupal_set_message('A private file system path must be defined before you are permitted to allow file uploads. Please contact support using the Feedback and Support link in your toolbar.');
+    } else {
+      // If it's a new form component, make sure only private files are allowed.
+      if (empty($form['cid']['#value'])) {
+        $form['extra']['scheme']['#default_value'] = 'private';
+      }
+      // Always disable the scheme option.
+      // If it's a new component, we want to make sure it's private.
+      // But even if the form exists already, the scheme shouldn't change otherwise existing files won't be accessible after switching the scheme.
+      $form['extra']['scheme']['#disabled'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ * Purge the footer views data when a footer node is saved.
+ */
+function templatron_node_update($node) {
+  if ($node->type == 'footer') {
+    cache_clear_all('footer:', 'cache_views_data', TRUE);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Cache bust CSS files after updating css_injector rules.
+ */
+function templatron_form_css_injector_edit_alter(&$form, &$form_state, $form_id) {
+  $form['buttons']['save']['#submit'][] = '_templatron_cache_busting';
+  $form['buttons']['save_and_continue']['#submit'][] = '_templatron_cache_busting';
+}
+/**
+ * Implements hook_ctools_plugin_pre_alter().
+ * Cache bust JS files after updating js_injector rules.
+ * The js_injector modules uses the cTools Export UI to create the edit form.
+ * Here we are overriding the submit function tied to that form.
+ * At press time, that submit function, js_injector_ctools_export_ui_form_submit,
+ * was empty.
+ */
+function templatron_ctools_plugin_pre_alter(&$plugin, &$info) {
+  if (isset($plugin['schema']) && ($plugin['schema'] == 'js_injector_rule')) {
+    $plugin['form']['submit'] = '_templatron_cache_busting';
+  }
+}
+
+/**
+ * A callback to bust caches.
+ */
+function _templatron_cache_busting() {
+  _drupal_flush_css_js();
+  drupal_clear_css_cache();
+  drupal_clear_js_cache();
+}
+
+
+/*** ===================================================================== ***/
+/*** VARNISH CACHE BUSTING ***/
+/*** Below are functions to allow for busting Varnish caches. ***/
+/*** ===================================================================== ***/
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Add a Varnish cache purge button to the performance settings.
+ */
+function templatron_form_system_performance_settings_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'system_performance_settings') {
+    $form['clear_cache']['clear']['#value'] = 'Clear Drupal cache';
+    $form['clear_cache']['clear_varnish'] = array (
+      '#type' => 'submit',
+      '#value' => t('Clear Varnish cache'),
+      '#submit' => array('_templatron_purge_varnish'),
+    );
+  }
+}
+
+/**
+ * A function to purge the Varnish cache for the current domain.
+ */
+function _templatron_purge_varnish() {
+  // See if we're actually in the Acquia environment. If not, don't do anything.
+  if (!isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    drupal_set_message('This site is not in the Acquia environment, so no Varnish caches were purged.');
+    return;
+  } else {
+    $env = $_ENV['AH_SITE_ENVIRONMENT'];
+  }
+
+  // Define the Acquia API user 
+  $acquiaUser = 'nsitwebserv@gmail.com';
+  $acquiaPwd = 'OgdwOnhtw5AWeOpQ7mkh0GOLkV2LVBQCgq7p3xZhUyT3q1vUlB8/SsS15jVes6CHAEH/oiEZc0h6';
+
+  // Get the domain to be purged
+  global $base_url;
+  $vhost = parse_url($base_url, PHP_URL_HOST);
+
+  /*
+  *   Purge Varnish cache for a domain using acquia cloud API
+  */
+  try
+  {
+    $ch = curl_init('https://cloudapi.acquia.com/v1/sites/prod:templatron/envs/' . $env . '/domains/' . $vhost .'/cache.json');
+    curl_setopt($ch, CURLOPT_USERPWD, $acquiaUser . ":" . $acquiaPwd);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json')
+    );
+
+    $result = curl_exec($ch);
+    $response = json_decode($result);
+
+    if(isset($response->description) && mb_ereg('Clear web cache', $response->description) > 0)
+    {
+      drupal_set_message('Varnish caches have been purged for this site.', 'status');
+    }
+    elseif(isset($response->message))
+    {
+      drupal_set_message($response->message, 'status');
+      return;
+    }
+    else
+    {
+      drupal_set_message('Varnish purge failed.  Unknown error.', 'status');
+      return;
+    }
+  }
+  catch(Exception $e)
+  {
+    drupal_set_message('Varnish purge failed. Unable to send to Acquia.', 'status');
+    return;
+  }
+}

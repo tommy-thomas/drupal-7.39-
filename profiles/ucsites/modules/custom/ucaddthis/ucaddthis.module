@@ -1,0 +1,34 @@
+<?php
+function ucaddthis_block_info() {
+  // This example comes from node.module.
+  $blocks['ucaddthisblock'] = array(
+    'info' => t('AddThis'), 
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+function ucaddthis_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'ucaddthisblock':
+      $block['subject'] = t('Share this page');
+      $block['content'] = 
+      '<div class="addthis_toolbox addthis_default_style">'
+      . '<a class="addthis_button_facebook" style="cursor:pointer"></a>'
+      . '<a class="addthis_button_twitter" style="cursor:pointer"></a>'
+      . '<a class="addthis_button_email" style="cursor:pointer"></a>'
+      . '<a class="addthis_button_compact"></a>'
+      . '<a class="addthis_counter addthis_bubble_style"></a>'
+      . '</div>';      
+      break;
+  }
+  return $block;
+}
+
+function ucaddthis_preprocess_html(&$variables, $hook) {
+  drupal_add_js('//s7.addthis.com/js/300/addthis_widget.js#pubid=webserv', array(
+    'type' => 'external',
+    'every_page' => TRUE,
+  ));
+}

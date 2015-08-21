@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the CLAS directory feature.
+ */
+
+include_once 'clas_directory.features.inc';

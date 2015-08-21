@@ -1,0 +1,13 @@
+<?php
+/**
+  * Implements hook_form_alter().
+  */
+function ucwebformssl_form_alter(&$form, &$form_state, $form_id) {
+  // If it's a webform, set the https variable to TRUE.
+  // Any page with a form with this var set to true will be redirected to https by the SecureLogin module.
+	if (isset($form['#node'])) {
+	  if ($form['#node']->type == 'webform') {
+	    $form['#https'] = TRUE;
+	  }
+	}
+}

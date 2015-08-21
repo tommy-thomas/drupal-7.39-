@@ -1,0 +1,6 @@
+name = UChicago Webform SSL
+description = "Forces webforms to use SSL (requires SecureLogin module)"
+core = 7.x
+package = UChicago
+files[] = ucwebformssl.install
+files[] = ucwebformssl.module

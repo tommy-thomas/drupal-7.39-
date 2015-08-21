@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the LDAP configuration feature.
+ */
+
+include_once('ldap_configuration.features.inc');

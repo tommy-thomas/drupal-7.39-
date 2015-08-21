@@ -1,0 +1,50 @@
+.wordmark a.uc-wordmark {
+  float: none; }
+
+.wordmark a.site-name h1 {
+  text-align: right; }
+
+html.svg .wordmark a.uc-wordmark, html.svg footer .shield a {
+  background-image: url("../i/uc_bsd_wordmark.svg");
+  /*background-image:url('../i/uc_bsd_wordmark_horizontal.svg');*/ }
+
+html.svg .mobile-branding .uc-wordmark-mobile {
+  /*background: url('../i/template/shield.svg') no-repeat;
+  background-size: 8%;*/ }
+
+html.lt-ie9 .wordmark a.uc-wordmark {
+  /* http://stackoverflow.com/questions/4885145/ie-8-background-size-fix */
+  background: no-repeat center center fixed;
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/sites/all/themes/plaisance_bsd/i/uc_bsd_wordmark.png', sizingMethod='scale');
+  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/sites/all/themes/plaisance_bsd/i/uc_bsd_wordmark.png', sizingMethod='scale')"; }
+
+.wordmark a.uc-wordmark {
+  width: 226px;
+  height: 94px;
+  background: transparent url("../i/uc_bsd_wordmark.png") 0 0 no-repeat;
+  background-size: 100%; }
+
+footer .shield a {
+  width: 200px;
+  height: 83px;
+  background: transparent url("../i/uc_bsd_wordmark.png") 0 0 no-repeat;
+  background-size: 100%; }
+
+/* Small desktop */
+@media only screen and (min-width: 768px) and (max-width: 979px) {
+  .wordmark a.uc-wordmark {
+    width: 156px;
+    height: 65px; }
+
+  footer .shield a {
+    width: 140px;
+    height: 59px; } }
+/* Medium desktop */
+@media only screen and (min-width: 980px) and (max-width: 1249px) {
+  .wordmark a.uc-wordmark {
+    width: 192px;
+    height: 80px; }
+
+  footer .shield a {
+    width: 172px;
+    height: 72px; } }

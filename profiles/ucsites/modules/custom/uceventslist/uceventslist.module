@@ -1,0 +1,24 @@
+<?php
+
+function uceventslist_block_info() {
+  // This example comes from node.module.
+  $blocks['uceventsblock'] = array(
+    'info' => t('Calendar list widget'), 
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+function uceventslist_block_view($delta = '') {
+	$calendar_listid = variable_get('templatron_calendar_list_id');
+	$calendar_apikey = variable_get('templatron_calendar_api_key');
+  $block = array();
+  switch ($delta) {
+    case 'uceventsblock':
+      $block['subject'] = t('Events');
+      $block['content'] = 
+      '<script src="//events.uchicago.edu/widgets/list.php?key=' . $calendar_apikey . '&id=' . $calendar_listid. '" type="text/javascript"></script>'; 
+      break;
+  }
+  return $block;
+}

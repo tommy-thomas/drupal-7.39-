@@ -1,0 +1,8 @@
+name = UCSiteRequest
+description = "Helper for Site Request Content Type"
+core = 7.x
+package = UChicago
+dependencies[] = block
+files[] = ucsiterequest.module
+scripts[] = ucsiterequest.js
+stylesheets[all][] = ucsiterequest.css

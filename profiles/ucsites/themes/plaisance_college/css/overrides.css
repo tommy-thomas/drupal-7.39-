@@ -1,0 +1,131 @@
+/*** HEADER ***/
+.wordmark {
+  background: white;
+  border-bottom-color: #dad9d9;
+  border-top-color: white; }
+  .wordmark a.site-name {
+    color: #800000; }
+    .wordmark a.site-name h1.large {
+      font-family: "ProximaNova-Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 3.75em; }
+  .wordmark a.uc-wordmark {
+    width: 281px;
+    height: 80px;
+    background-image: url("/sites/all/themes/plaisance_college/i/wordmark_college.png"); }
+
+html.svg .wordmark a.uc-wordmark {
+  background-image: url("/sites/all/themes/plaisance_college/i/wordmark_college.svg"); }
+
+@media only screen and (min-width: 768px) {
+  #topnav {
+    position: relative;
+    top: -1px; } }
+@media only screen and (max-width: 1249px) and (min-width: 980px) {
+  .wordmark a.uc-wordmark {
+    width: 263px;
+    height: 75px; }
+  .wordmark a.site-name h1.large {
+    font-size: 2.875em; } }
+@media only screen and (max-width: 979px) and (min-width: 768px) {
+  .wordmark a.uc-wordmark {
+    width: 221px;
+    height: 63px; }
+  .wordmark a.site-name h1.large {
+    font-size: 2.25em; } }
+@media only screen and (max-width: 767px) {
+  .wordmark a.site-name h1.large {
+    font-size: 2.0625em; } }
+/*** BLOCKS ***/
+.sidebar .block a {
+  color: #155F83; }
+
+.sidebar .module .node-homepage-mini-feature h2 {
+  color: #6c6d6d;
+  font-size: 1.142em;
+  line-height: 1.25em; }
+
+/*** FOOTER ***/
+footer {
+  background: #333333; }
+
+footer .shield a {
+  background-image: url("/sites/all/themes/plaisance_college/i/ucwordmark_college.png");
+  height: 78px;
+  opacity: 1; }
+
+@media only screen and (max-width: 1249px) and (min-width: 980px) {
+  footer .shield a {
+    height: 70px; } }
+@media only screen and (max-width: 979px) and (min-width: 768px) {
+  footer .shield a {
+    height: 53px; } }
+@media only screen and (max-width: 767px) {
+  footer .shield a {
+    height: 78px; } }
+html.svg footer .shield a {
+  background-image: url("/sites/all/themes/plaisance_college/i/ucwordmark_college.svg"); }
+
+footer #block-views-footer-socialmedia .view-content .views-field a:before {
+  color: #d2d0d0; }
+
+.footer .column-width-3.right {
+  float: right; }
+
+/*** MAIN CONTENT ***/
+body.front .container.page {
+  margin-top: 1em; }
+
+.maincontent p, .maincontent li {
+  line-height: 1.5em; }
+
+/*** NAV ***/
+#leftnav {
+  border: none; }
+
+#leftnav ul {
+  background: white; }
+
+#leftnav ul li a {
+  display: block;
+  color: #800000;
+  background: white;
+  border: none; }
+
+#leftnav ul li a.on, #leftnav ul li a:hover, #leftnav ul li a:focus {
+  color: white;
+  background: #800000; }
+
+#leftnav ul li ul li a.on, #leftnav ul li #leftnav ul li ul li a:hover, #leftnav ul li ul li a:focus {
+  color: #800000; }
+
+#leftnav ul li ul li a {
+  color: #800000; }
+
+#leftnav ul li ul li a:hover, #leftnav ul li ul li a:focus {
+  color: #800000; }
+
+/*** FORMS ***/
+.form-item input, .form-item textarea, .form-item select {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px; }
+
+#search-block-form {
+  position: relative; }
+  #search-block-form input[type="text"] {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 26px; }
+  #search-block-form .form-submit {
+    background: transparent url("/sites/all/themes/plaisance_college/i/search_dark.png") 0 0 no-repeat;
+    text-indent: -999em;
+    border: 0;
+    padding: 0;
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    top: 7px;
+    right: 4px; }

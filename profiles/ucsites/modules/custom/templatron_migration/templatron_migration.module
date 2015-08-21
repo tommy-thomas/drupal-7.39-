@@ -1,0 +1,26 @@
+<?php
+function templatron_migration_form_alter(&$form, &$form_state,$form_id) {
+  if (isset($form['#node']->type) && $form['#node']->type == 'webform') {
+    unset($form['submitted']);
+    unset($form['actions']);
+    drupal_set_message("This website is currenty undergoing maintenance and the form(s) on this page are not available at this time. Please try again after 12:00AM on 12/17.");
+  }
+  switch($form_id) {
+    case 'user_login':
+      if (isset($_GET['access_key']) && ($_GET['access_key'] == 'migration')) { break; }
+      $form['#access'] = FALSE;
+      drupal_set_message("This website is currently undergoing maintenance and is not available for editing at this time. Please check back after 12:00AM on 12/17. If you have an *urgent* need to update this website before that time, please send an email to sites-help@lists.uchicago.edu.");
+      break;
+    case 'user_login_block':
+      $form['message'] = array(
+        '#type' => 'item',
+        '#title' => '',
+        '#markup' => '<em>This website is currently undergoing maintenance and is not available for editing at this time. Please check back after 12:00AM on 12/17. If you have an <strong>urgent</strong> need to update this website before that time, please send an email to sites-help@lists.uchicago.edu.</em>',
+      );
+      unset($form['name']);
+      unset($form['pass']);
+      unset($form['actions']);
+      unset($form['links']);
+      break;
+  }
+}

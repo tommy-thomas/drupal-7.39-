@@ -1,0 +1,7 @@
+name = Video Filter
+description = Filter to include videos from Youtube, Google video etc. This is adapted from http://drupal.org/project/video_filter 
+core = 7.x
+package = Custom
+
+stylesheets[all][] = video_filter.css
+

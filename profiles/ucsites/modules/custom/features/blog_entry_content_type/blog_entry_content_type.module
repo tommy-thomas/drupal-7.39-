@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Blog entry content type feature.
+ */
+
+include_once 'blog_entry_content_type.features.inc';

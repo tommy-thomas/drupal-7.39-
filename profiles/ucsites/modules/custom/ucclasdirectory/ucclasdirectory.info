@@ -1,0 +1,6 @@
+name = CLAS Directory Helper
+description = "Provides theming support for the CLAS Directory feature"
+core = 7.x
+package = UChicago
+files[] = ucclasdirectory.module
+stylesheets[all][] = ucclasdirectory.css

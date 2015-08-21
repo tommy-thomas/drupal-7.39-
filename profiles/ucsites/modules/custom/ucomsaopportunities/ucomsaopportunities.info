@@ -1,0 +1,6 @@
+name = OMSA Opportunities Helper
+description = "Provides theming support for the OMSA Opportunities feature"
+core = 7.x
+package = UChicago
+files[] = ucomsaopportunities.module
+stylesheets[all][] = ucomsaopportunities.css

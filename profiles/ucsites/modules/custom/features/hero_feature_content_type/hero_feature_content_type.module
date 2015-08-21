@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Hero feature content type feature.
+ */
+
+include_once 'hero_feature_content_type.features.inc';

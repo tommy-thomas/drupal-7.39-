@@ -1,0 +1,203 @@
+/*
+ * Colorbox
+ */
+#cboxLoadedContent .embedded-video, #cboxLoadedContent .player {
+  height: 100%; }
+
+/*
+ * Video Gallery
+ */
+.views-field-field-videogallery-video-embed a {
+  position: relative; }
+  .views-field-field-videogallery-video-embed a span {
+    margin-left: -1.5em;
+    margin-top: -1.5em;
+    top: 50%;
+    left: 50%; }
+
+.views-field-field-videogallery-video-embed a span, .view-homepage-videos .views-row a span {
+  color: white;
+  font-size: 1.4em;
+  padding: 1em .9em .7em 1.1em;
+  position: absolute;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  background: none repeat scroll 0 0 rgba(47, 47, 47, 0.7);
+  border: 3px solid #FFFFFF;
+  border-radius: 50px;
+  line-height: 1.3em; }
+
+.views-field-field-videogallery-video-embed a:hover span, .view-homepage-videos .views-row a:hover span {
+  text-shadow: 0 0 16px #000000;
+  color: none repeat scroll 0 0 #2f2f2f;
+  background: none repeat scroll 0 0 rgba(47, 47, 47, 0.9); }
+
+html.lt-ie9 .views-field-field-videogallery-video-embed a span, html.lt-ie9 .view-homepage-videos .views-row a span {
+  background: transparent;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#B22F2F2F,endColorstr=#B22F2F2F)";
+  /* IE8 */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#B22F2F2F,endColorstr=#B22F2F2F);
+  /* IE6 & 7 */
+  zoom: 1; }
+
+.view-video-gallery.view-display-id-page .attachment .views-row {
+  margin: 0; }
+.view-video-gallery.view-display-id-page .attachment .views-field-field-videogallery-video-embed a span {
+  font-size: 2em; }
+.view-video-gallery.view-display-id-page .attachment .views-field-title .field-content {
+  color: #333;
+  display: block;
+  font-size: 1.4375em;
+  line-height: 1.13em;
+  margin-bottom: .434em; }
+.view-video-gallery.view-display-id-page .attachment .views-field-field-description .field-content {
+  line-height: 1.618em;
+  font-size: .9375em;
+  margin-top: .618em; }
+.view-video-gallery.view-display-id-page .attachment.attachment-before:before {
+  background: none repeat scroll 0 0 #670808;
+  color: #fff;
+  content: "Featured Video";
+  display: block;
+  font-family: ProximaNova-Light,Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-size: 1.35em;
+  line-height: 1.48em;
+  margin-bottom: 0;
+  padding: 0.175em 0.5em;
+  width: 8em; }
+
+.view-video-gallery .item-list .pager {
+  padding: 2em 0 0; }
+  .view-video-gallery .item-list .pager a.ss-icon {
+    position: relative;
+    top: 3px; }
+  .view-video-gallery .item-list .pager a:hover {
+    text-decoration: none; }
+.view-video-gallery .pager-current {
+  font-weight: 300; }
+.view-video-gallery .view-content {
+  clear: both; }
+  .view-video-gallery .view-content .views-row .views-field-field-videogallery-video-embed {
+    margin-bottom: .625em; }
+.view-video-gallery .views-row-1, .view-video-gallery .views-row-4 {
+  margin-left: 0 !important; }
+.view-video-gallery .views-row-4 {
+  clear: left; }
+.view-video-gallery .views-row {
+  margin-top: 2em; }
+
+.view-homepage-videos h3 {
+  margin-top: .666em; }
+
+#block-views-homepage-videos-featured {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  position: relative; }
+  #block-views-homepage-videos-featured h2 {
+    background-color: #670808;
+    color: #FFF;
+    display: inline-block;
+    font-family: ProximaNova-Light,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-size: 1.5em;
+    line-height: 1.48em;
+    padding: .175em .5em;
+    margin-bottom: 0; }
+  #block-views-homepage-videos-featured .view-header {
+    position: absolute;
+    top: 18px;
+    right: 0; }
+  #block-views-homepage-videos-featured .views-row {
+    position: relative; }
+
+#block-views-homepage-videos-videos {
+  padding-bottom: 0; }
+  #block-views-homepage-videos-videos .views-row {
+    float: left;
+    position: relative; }
+  #block-views-homepage-videos-videos .views-row-2 {
+    margin-left: 16px; }
+
+/*
+ * Responsive
+ */
+/* Single column format */
+@media only screen and (max-width: 767px) {
+  #block-views-homepage-videos-featured, #block-views-homepage-videos-videos {
+    width: 100%; }
+
+  #block-views-homepage-videos-videos .views-row {
+    width: 48%; }
+
+  #block-views-homepage-videos-videos .views-row-2 {
+    margin-left: 4%; }
+
+  #block-views-homepage-videos-videos .view-homepage-videos .views-row a span {
+    font-size: 1em; }
+
+  .view-display-id-featured .views-row a span {
+    top: 35%;
+    left: 50%;
+    margin-left: -1.5em; }
+
+  #block-views-homepage-videos-videos .view-homepage-videos .views-row a span {
+    top: 25%;
+    left: 50%;
+    margin-left: -1.5em; }
+
+  body.page-video-gallery #page-title {
+    margin-bottom: 2em; } }
+/* Phones */
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  .view-display-id-featured .views-row a span {
+    top: 25%;
+    left: 50%;
+    margin-left: -1.5em; }
+
+  #block-views-homepage-videos-videos .view-homepage-videos .views-row a span {
+    top: 20%;
+    left: 50%;
+    margin-left: -1.5em; } }
+/* Small desktop */
+@media only screen and (min-width: 768px) and (max-width: 979px) {
+  .view-homepage-videos .views-row a span {
+    font-size: 1em;
+    top: 24px;
+    left: 59px; }
+
+  #block-views-homepage-videos-videos .views-row {
+    width: 166px; }
+
+  #block-views-homepage-videos-videos .views-row-2 {
+    margin-left: 0px; }
+
+  #block-views-homepage-videos-featured .view-header {
+    position: static;
+    margin: 1em 0; } }
+/* Medium desktop */
+@media only screen and (min-width: 980px) and (max-width: 1249px) {
+  .view-homepage-videos .views-row a span {
+    top: 30px;
+    left: 78px; }
+
+  #block-views-homepage-videos-videos .views-row {
+    width: 220px; }
+
+  #block-views-homepage-videos-videos .views-row-2 {
+    margin-left: 0px; }
+
+  #block-views-homepage-videos-featured .view-header {
+    position: static;
+    margin: 1em 0; } }
+/* Large desktop */
+@media only screen and (min-width: 1250px) {
+  .view-display-id-featured .views-row a span {
+    top: 53px;
+    left: 118px; }
+
+  #block-views-homepage-videos-videos .views-row {
+    width: 142px; }
+
+  #block-views-homepage-videos-videos .view-homepage-videos .views-row a span {
+    font-size: 1em;
+    top: 16px;
+    left: 48px; } }

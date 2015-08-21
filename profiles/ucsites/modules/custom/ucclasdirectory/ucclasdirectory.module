@@ -1,0 +1,18 @@
+<?php
+function ucclassdirectory_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ucclasdirectory'),
+    'template path' => drupal_get_path('module', 'ucclasdirectory'),
+  );
+}
+
+// Register a theme suggestion for node--clas-directory-entry
+// function ucclasdirectory_theme() {
+//   return array(
+//     'node__clas_directory_entry' => array(
+//       'template' => 'node--clas-directory-entry',
+//       'path' => drupal_get_path('module', 'ucclasdirectory'),
+//     ),
+//   );
+// }

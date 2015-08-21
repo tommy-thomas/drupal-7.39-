@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Opportunity views feature.
+ */
+
+include_once 'opportunity_views.features.inc';

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Basic page with multiple columns feature.
+ */
+
+include_once('basic_page_with_multiple_columns.features.inc');

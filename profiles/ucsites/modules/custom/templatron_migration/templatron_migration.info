@@ -1,0 +1,5 @@
+name = Templatron Migration
+description = "This module blocks editors from making updates while the Acquia migration is underway"
+core = 7.x
+package = UChicago
+files[] = templatron_migration.module

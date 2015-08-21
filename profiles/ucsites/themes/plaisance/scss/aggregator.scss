@@ -1,0 +1,17 @@
+#aggregator {
+  .rss-icon {
+    float: right;
+    margin-left: 10px;
+  }
+  .feed-description {
+    font-style: italic;
+    line-height: 1.625em;
+    margin-bottom: 1.875em;
+  }
+  .feed-url, .feed-updated {
+    display: none;
+  }
+  .feed-item {
+    margin-bottom: 3em;
+  }
+}

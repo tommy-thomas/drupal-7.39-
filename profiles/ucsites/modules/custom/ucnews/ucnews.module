@@ -1,0 +1,21 @@
+<?php
+function ucnews_block_info() {
+  // This example comes from node.module.
+  $blocks['ucnewsblock'] = array(
+    'info' => t('UC News'), 
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+function ucnews_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'ucnewsblock':
+      $block['subject'] = t('UChicago News Feed');
+      $block['content'] = '<script src="https://feeds.uchicago.edu/getfeed.php?url=4&amp;max=5" type="text/javascript"></script>'
+      . '<p><strong><a href="http://news.uchicago.edu">More News &raquo;</a></strong></p>';
+      break;
+  }
+  return $block;
+}

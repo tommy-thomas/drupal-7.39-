@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Hero feature views feature.
+ */
+
+include_once 'hero_feature_views.features.inc';

@@ -1,0 +1,5 @@
+name = UChicago AddThis
+description = "Custom AddThis module"
+core = 7.x
+package = UChicago
+files[] = ucaddthis.module
