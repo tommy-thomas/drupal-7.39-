@@ -24,6 +24,9 @@ dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = rdf
 
+; Backup and Migrate
+dependencies[] = backup_migrate
+
 ; Information added by Drupal.org packaging script on 2015-08-19
 version = "7.39"
 project = "drupal"
